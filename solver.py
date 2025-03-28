@@ -51,6 +51,14 @@ def generate_puzzle(height, width):
                     grid[i][j] = random.choice(['l', 't'])
                 return grid
 
+def solve_puzzle(grid):
+    for cell in grid:
+        (x,y) = cell
+        cell_right = (x+1, y)
+        cell_left = (x-1, y)
+        cell_above = (x, y+1)
+        cell_below = (x, y-1)
+
 
 
 
