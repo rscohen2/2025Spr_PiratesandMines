@@ -59,7 +59,6 @@ def brute_force(grid, puzzle):
                 for option in ['t', 'l']:
                     grid[x, y] = option
                     if check_clue(x, y, puzzle, grid):
-                        if brute_force(grid, puzzle):
                             return True
                     # backtrack
                     grid[x, y] = 'e'
