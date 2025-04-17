@@ -132,6 +132,28 @@ def generate_unsolved_puzzle(height, width):
 
 #TODO: create func to verify generated puzzle has only 1 solution
 def verify_only_one_soln():
+    def find_solutions(self):
+        """
+        Searches for solutions by filling in all monster cells.
+        If more than one solution is found, the search stops once two have been found.
+        Returns a list of complete grids (each grid is a list of lists).
+        """
+        self.solutions = []
+        self._solve_recursive(0)
+        return self.solutions[:2]  # if more than one solution, returning only two of them
+
+    def _solve_recursive(self, index):
+        # If we already have two solutions, we stop searching.
+        if len(self.solutions) >= 2:
+            return
+
+        if self.is_valid_board_complete():
+            # Save a deep copy of the grid as a solution.
+            sol = [row[:] for row in self.grid]
+            self.solutions.append(sol)
+            return
+
+
     pass
 
 
