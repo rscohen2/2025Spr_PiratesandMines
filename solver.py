@@ -142,8 +142,10 @@ def verify_only_one_soln():
 #TODO: create an interactive UI to play the project?
 
 #TODO: write the README to be an introduction about our puzzle
+    ##Becca?
 
 #TODO: live class presentation
+    ##Everyone for the parts they coded/worked on
 
 #TODO: targeted algorithm analysis
 
