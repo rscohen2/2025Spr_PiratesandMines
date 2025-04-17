@@ -18,6 +18,8 @@ example_board_solved = [[t,t,0],[t,1,l],[l,-1,-1]]
 
 
 def check_clue(x,y, grid, potential_solution):
+    grid = np.array(grid)
+    rows, cols = grid.shape
     if grid[x, y] != 'l' and grid[x, y] != 't':
         cell_clue = 0
         directions = {
