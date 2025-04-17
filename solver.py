@@ -1,10 +1,11 @@
 
 import random
+import numpy as np
 
 class Game:
     def __init__(self):
         self.board = [[' ' for _ in range(9)] for _ in range(9)]
-        self.grid_size = (9, 9)
+        self.grid_size = (6, 6)
         self.game_over = False
 
 t = 1
@@ -26,7 +27,7 @@ def is_valid_board_complete(self):
     return True
 
 
-def generate_puzzle(height, width):
+def generate_solved_puzzle(height, width):
     """
     Generates a random Haunted Mirror Maze puzzle of given height and width.
     The puzzle is created by randomly placing mirrors and then randomly distributing
@@ -39,25 +40,78 @@ def generate_puzzle(height, width):
     attempt = 0
     while True:
         attempt += 1
-        # Create an empty grid (all cells start as empty monster cells).
+        # Create an empty grid (all cells start as empty).
         grid = [[' ' for _ in range(width)] for _ in range(height)]
 
-        # Randomly place mirrors with a fixed probability (e.g., 25% chance).
-        nonempty_probability = 0.25
+        # Randomly place treasure/mines
+        nonempty_probability = 0.50
 
         for i in range(height):
             for j in range(width):
                 if random.random() < nonempty_probability:
                     grid[i][j] = random.choice(['l', 't'])
-                return grid
+
+                grid_full = [row[:] for row in grid]
+                # for _ in range(count_G):
+                #     if positions:
+                #         i, j = positions.pop()
+                #         grid_full[i][j] = 'G'
+        return grid
+
+
+# def add_clues_to_puzzle(grid):
+#     #for any empty cell, sum the t and l cells above/below/next to them
+#     grid = np.array(grid)
+#     rows,cols = grid.shape
+#     for x in range(rows):
+#         for y in range(cols):
+#             if grid[x,y] != 'l' or 't':
+#                 cell_right = (x + 1, y)
+#                 cell_left = (x - 1, y)
+#                 cell_above = (x, y + 1)
+#                 cell_below = (x, y - 1)
+#                 cell_clue = grid[cell_right] + grid[cell_left] + gridf[cell_above] + grid[cell_below]
+#                 cell = cell_clue
+#         return grid
+
 
 def solve_puzzle(grid):
-    for cell in grid:
-        (x,y) = cell
-        cell_right = (x+1, y)
-        cell_left = (x-1, y)
-        cell_above = (x, y+1)
-        cell_below = (x, y-1)
+    grid = np.array(grid)
+    rows, cols = grid.shape
+
+    # Function to convert cell values to numbers
+    def cell_value(val):
+        if val == 't':
+            return 1
+        elif val == 'l':
+            return -1
+        try:
+            return int(val)
+        except ValueError:
+            return 0
+
+    for x in range(rows):
+            for y in range(cols):
+                if grid[x, y] != 'l' and grid[x,y]!= 't':
+                    cell_clue = 0
+                    directions = {
+                    'cell_right': (x+1, y),
+                    'cell_left': (x-1, y),
+                    'cell_above': (x, y+1),
+                    'cell_below': (x, y-1)}
+                    for dir_name, (nx, ny) in directions.items():
+                        if 0 <= nx < rows and 0 <= ny < cols:
+                            neighbor_value = grid[nx, ny]
+                            if neighbor_value != ' ':
+                                cell_clue += cell_value(neighbor_value)
+                    # cell_clue = grid[cell_right] + grid[cell_left] + grid[cell_above] + grid[cell_below]
+                                grid[x, y] = cell_clue
+    return grid
+
+if __name__ == "__main__":
+    grid = generate_solved_puzzle(6,6)
+    grid = solve_puzzle(grid)
+    print(grid)
 
 
 
