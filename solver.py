@@ -155,6 +155,9 @@ def verify_only_one_soln():
 #TODO: performance measurement
     ##Ke
 
+#TODO: clean up and document code
+    #Becca
+
 
 
 if __name__ == "__main__":
