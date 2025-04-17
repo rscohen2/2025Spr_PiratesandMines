@@ -72,7 +72,7 @@ if __name__ == "__main__":
     game = Game()
     puzzle = generate_unsolved_puzzle(6,6)
     solution = puzzle.copy()
-    potential_solution = brute_force(solution, puzzle)
+    potential_solution = brute_force(puzzle, solution)
 
 
 
