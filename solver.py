@@ -17,6 +17,18 @@ example_board = [['','_',0],['_',1,'_'],['_',-1,-1]]
 example_board_solved = [[t,t,0],[t,1,l],[l,-1,-1]]
 
 
+# Function to convert cell values to numbers
+def cell_value(val):
+    if val == 't':
+        return 1
+    elif val == 'l':
+        return -1
+    try:
+        return int(val)
+    except ValueError:
+        return 0
+
+
 def check_clue(x,y, grid, potential_solution):
     grid = np.array(grid)
     rows, cols = grid.shape
@@ -75,6 +87,7 @@ if __name__ == "__main__":
     puzzle = generate_unsolved_puzzle(6,6)
     solution = puzzle.copy()
     potential_solution = brute_force(puzzle, solution)
+    print(potential_solution)
 
 
 
