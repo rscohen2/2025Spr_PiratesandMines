@@ -78,7 +78,7 @@ def generate_solved_puzzle(height, width):
 #         return grid
 
 
-def solve_puzzle(grid):
+def get_clues(grid):
     grid = np.array(grid)
     rows, cols = grid.shape
 
@@ -111,9 +111,31 @@ def solve_puzzle(grid):
                                 grid[x, y] = cell_clue
     return grid
 
+#TODO: create the function below in order to have a puzzle to solve
+def remove_aLL_treasure_and_mines(solved_puzzle):
+    rows, cols = solved_puzzle.shape
+    grid = solved_puzzle
+    for x in range(rows):
+            for y in range(cols):
+                if grid[x, y] == 'l' or grid[x,y] == 't':
+                    grid[x,y] = 'e'
+    return grid
+
+
+
+def generate_unsolved_puzzle(height, width):
+    solved_puzzle = generate_solved_puzzle(height, width)
+    puzzle_clues = get_clues(solved_puzzle)
+    unsolved_puzzle = remove_aLL_treasure_and_mines(puzzle_clues)
+    return unsolved_puzzle
+
+
 #TODO: create func to verify generated puzzle has only 1 solution
 def verify_only_one_soln():
     pass
+
+
+
 
 #TODO: make sure the puzzle works for varying sizes, and possibly add difficulties like diaganol cells counting towards the clue etc
 
@@ -130,9 +152,11 @@ def verify_only_one_soln():
 
 
 if __name__ == "__main__":
-    grid = generate_solved_puzzle(6,6)
-    grid = solve_puzzle(grid)
-    print(grid)
+    # grid = generate_solved_puzzle(6,6)
+    # grid = solve_puzzle(grid)
+    # print(grid)
+    unsolved_puzzle = generate_unsolved_puzzle(6,6)
+    print(unsolved_puzzle)
 
 
 
