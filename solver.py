@@ -29,7 +29,7 @@ def cell_value(val):
         return 0
 
 
-def check_clue(x,y, grid, potential_solution):
+def check_clue(x,y, grid, clue_grid):
     grid = np.array(grid)
     rows, cols = grid.shape
     if grid[x, y] != 'l' and grid[x, y] != 't':
@@ -44,7 +44,7 @@ def check_clue(x,y, grid, potential_solution):
                 neighbor_value = grid[nx, ny]
                 if neighbor_value != ' ':
                     cell_clue += cell_value(neighbor_value)
-                    if cell_clue == potential_solution[x,y]:
+                    if cell_clue == clue_grid[x,y]:
                         return True
                     else:
                         return False
@@ -56,14 +56,17 @@ def brute_force(grid, puzzle):
     for x in range(rows):
         for y in range(cols):
             if grid[x, y] == 'e':
-                for option in ['t', 'l']:
-                    grid[x, y] = option
-                    if check_clue(x, y, puzzle, grid):
-                            return True
+                    grid[x, y] = 't'
+                    if check_clue(x, y, grid, puzzle):
+                        break
                     # backtrack
-                    grid[x, y] = 'e'
-                return False
-    return validate_entire_grid(grid, puzzle)
+                    else:
+                        grid[x,y] = 'l'
+                        if check_clue(x, y, grid, puzzle):
+                            break
+                        else:
+                            grid[x, y] = 'e'
+    return grid
 
 
 
