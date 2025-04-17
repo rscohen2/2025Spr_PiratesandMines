@@ -2,6 +2,9 @@
 import random
 import numpy as np
 
+
+
+
 class Game:
     def __init__(self):
         self.board = [[' ' for _ in range(9)] for _ in range(9)]
@@ -107,6 +110,24 @@ def solve_puzzle(grid):
                     # cell_clue = grid[cell_right] + grid[cell_left] + grid[cell_above] + grid[cell_below]
                                 grid[x, y] = cell_clue
     return grid
+
+#TODO: create func to verify generated puzzle has only 1 solution
+def verify_only_one_soln():
+    pass
+
+#TODO: make sure the puzzle works for varying sizes, and possibly add difficulties like diaganol cells counting towards the clue etc
+
+#TODO: create an interactive UI to play the project?
+
+#TODO: write the README to be an introduction about our puzzle
+
+#TODO: live class presentation
+
+#TODO: targeted algorithm analysis
+
+#TODO: performance measurement
+
+
 
 if __name__ == "__main__":
     grid = generate_solved_puzzle(6,6)
