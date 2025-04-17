@@ -139,7 +139,8 @@ def verify_only_one_soln():
 
 #TODO: make sure the puzzle works for varying sizes, and possibly add difficulties like diaganol cells counting towards the clue etc
 
-#TODO: create an interactive UI to play the project?
+#TODO: (optional)create an interactive UI to play the project?
+    ##Vedant
 
 #TODO: write the README to be an introduction about our puzzle
     ##Becca?
@@ -148,8 +149,10 @@ def verify_only_one_soln():
     ##Everyone for the parts they coded/worked on
 
 #TODO: targeted algorithm analysis
+    ##Vedant
 
 #TODO: performance measurement
+    ##Ke
 
 
 
