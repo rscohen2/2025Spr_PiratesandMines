@@ -88,12 +88,14 @@ def brute_force(grid, puzzle):
             if grid[x, y] == 'e':
                 grid[x][y] = 't'
                 #TODO resolve this function structure/organization
-                clue = get_clue(x, y, grid, puzzle)
-                if check_clue(x, y, grid, puzzle):
+                cell_clue, clue_grid, empty_neighbors_count = get_clue(x, y, grid, puzzle)
+                if check_clue(cell_clue, clue_grid, empty_neighbors_count,x, y):
                     continue
                 else:
                     grid[x][y] = 'l'
-                    if check_clue(x, y, grid, puzzle):
+                    # if check_clue(x, y, grid, puzzle):
+                    if check_clue(cell_clue, clue_grid, empty_neighbors_count, x, y):
+
                         continue
                     else:
                         # break
