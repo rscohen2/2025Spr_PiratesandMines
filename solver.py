@@ -30,7 +30,7 @@ def cell_value(val):
         return 0
 
 
-def check_clue(x,y, grid, clue_grid):
+def get_clue(x,y, grid, clue_grid):
     grid = np.array(grid)
     rows, cols = grid.shape
     if grid[x, y] != 'l' and grid[x, y] != 't':
@@ -44,18 +44,20 @@ def check_clue(x,y, grid, clue_grid):
         for dir_name, (nx, ny) in directions.items():
             if 0 <= nx < rows and 0 <= ny < cols:
                 neighbor_value = grid[nx, ny]
-                if neighbor_value != ' ':
+                if neighbor_value != 'e':
                     cell_clue += cell_value(neighbor_value)
                 else:
                     empty_neighbors_count += 1
+            return cell_clue,clue_grid, empty_neighbors_count
 
-                if cell_clue == clue_grid[x, y]:
-                    return True
-                    # if cell_clue + 1*empty_neighbors_count or cell_clue -1*empty_neighbors_count == clue_grid[x, y]:
-                    #     return True
-                if cell_clue + generate_permutation(empty_neighbors_count) == clue_grid[x, y]:
-                    return True
-                return False
+def check_clue(cell_clue, clue_grid, empty_neighbors_count,x, y):
+    if cell_clue == clue_grid[x, y]:
+        return True
+        # if cell_clue + 1*empty_neighbors_count or cell_clue -1*empty_neighbors_count == clue_grid[x, y]:
+        #     return True
+    if cell_clue + generate_permutation(empty_neighbors_count) == clue_grid[x, y]:
+        return True
+    return False
 
 
 
@@ -112,12 +114,12 @@ def brute_force(grid, puzzle):
 def check_board_full(grid):
     grid = np.array(grid)
     rows, cols = grid.shape
-        for x in range(rows):
-            for y in range(cols):
-                if grid[x][y] == 'e':
-                    break
-                else:
-                    continue
+    for x in range(rows):
+        for y in range(cols):
+            if grid[x][y] == 'e':
+                break
+            else:
+                continue
 
 
 
