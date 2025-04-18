@@ -99,9 +99,31 @@ def brute_force(grid, puzzle):
                                 xi, yj = x - i, y - j
                                 if 0 <= xi < len(grid) and 0 <= yj < len(grid[0]):  # bounds check
                                     if grid[xi][yj] == 'l':
-:
+                                        grid[xi][yj] = 't'
+                                    if grid[xi][yj] == 't':
+                                        grid[xi][yj] = 'l'
+                                if check_clue(xi, yj, grid, puzzle):
+                                    continue
+                                if check_board_full(grid):
+                                    if validate_entire_grid(grid, puzzle):
+                                        return grid
 
-    return grid
+
+def check_board_full(grid):
+    grid = np.array(grid)
+    rows, cols = grid.shape
+        for x in range(rows):
+            for y in range(cols):
+                if grid[x][y] == 'e':
+                    break
+                else:
+                    continue
+
+
+
+
+
+
 
     #all permutations that might possibly work
     #predictable/simple sequence to try, so that any backtracking is as simple as possible also
