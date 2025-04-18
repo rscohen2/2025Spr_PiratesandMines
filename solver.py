@@ -49,24 +49,46 @@ def check_clue(x,y, grid, clue_grid):
                     else:
                         return False
 
-def brute_force(grid, puzzle):
-    grid = np.array(grid)
-    rows, cols = grid.shape
+# def brute_force(grid, puzzle):
+#     grid = np.array(grid)
+#     rows, cols = grid.shape
+#
+    #all permutations that might possibly work
+    #predictable/simple sequence to try, so that any backtracking is as simple as possible also
+    #if layout not valid at all reject the whole thing, if not possible to get that clue
+    #if all empties and middle piece less than 4, then 2 must be treasure and 2 must be landmines etc
+    #or use it to shortcut some of the brute force combinations
+    #if all three full, might deduct last one
+    #backtrack to look for any other soln
+    #erase Ls until last T so becomes L and doesnt work, keep backtracking
+    #backtrack all the way back to beginning, flip to last choice and breaks, cut off half the entire search spoace right away
+    #not is it correct, but a contradiction/any clue that isn't possible with that configuration
 
-    for x in range(rows):
-        for y in range(cols):
-            if grid[x, y] == 'e':
-                    grid[x, y] = 't'
-                    if check_clue(x, y, grid, puzzle):
-                        break
-                    # backtrack
-                    else:
-                        grid[x,y] = 'l'
-                        if check_clue(x, y, grid, puzzle):
-                            break
-                        else:
-                            grid[x, y] = 'e'
-    return grid
+    #example code for dominosa, didn't fill the entire thing before
+
+    #could generate combos with multiple solns
+
+
+    # for x in range(rows):
+    #     for y in range(cols):
+    #         if grid[x, y] == 'e':
+    #             grid[x][y] = 't'
+    #         # if grid[x, y] == 'e':
+    #         #         grid[x, y] = 't'
+    # for x in range(rows):
+    #     for y in range(cols):
+    #         if grid[x][y] == 't' or grid[x][y] == 'l':
+    #             if check_clue(x, y, grid, puzzle):
+    #                 # break
+    #                 continue
+    #                     # backtrack
+    #             else:
+    #                 grid[x,y] = 'l'
+    #                 if check_clue(x, y, grid, puzzle):
+    #                     continue
+    #                 else:
+    #                     grid[x, y] = 'e'
+    # return grid
 
 
 
