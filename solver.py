@@ -33,22 +33,24 @@ def cell_value(val):
 def get_clue(x,y, grid, clue_grid):
     grid = np.array(grid)
     rows, cols = grid.shape
-    if grid[x, y] != 'l' and grid[x, y] != 't':
-        cell_clue = 0
-        empty_neighbors_count = 0
-        directions = {
-            'cell_right': (x + 1, y),
-            'cell_left': (x - 1, y),
-            'cell_above': (x, y + 1),
-            'cell_below': (x, y - 1)}
-        for dir_name, (nx, ny) in directions.items():
-            if 0 <= nx < rows and 0 <= ny < cols:
-                neighbor_value = grid[nx, ny]
-                if neighbor_value != 'e':
-                    cell_clue += cell_value(neighbor_value)
-                else:
-                    empty_neighbors_count += 1
-            return cell_clue,clue_grid, empty_neighbors_count
+    for x in range(rows):
+        for y in range(cols):
+            if grid[x, y] != 'l' and grid[x, y] != 't':
+                cell_clue = 0
+                empty_neighbors_count = 0
+                directions = {
+                    'cell_right': (x + 1, y),
+                    'cell_left': (x - 1, y),
+                    'cell_above': (x, y + 1),
+                    'cell_below': (x, y - 1)}
+                for dir_name, (nx, ny) in directions.items():
+                    if 0 <= nx < rows and 0 <= ny < cols:
+                        neighbor_value = grid[nx, ny]
+                        if neighbor_value != 'e':
+                            cell_clue += cell_value(neighbor_value)
+                        else:
+                            empty_neighbors_count += 1
+                return cell_clue,clue_grid, empty_neighbors_count
 
 def check_clue(cell_clue, clue_grid, empty_neighbors_count,x, y):
     if cell_clue == clue_grid[x, y]:
@@ -56,6 +58,8 @@ def check_clue(cell_clue, clue_grid, empty_neighbors_count,x, y):
         # if cell_clue + 1*empty_neighbors_count or cell_clue -1*empty_neighbors_count == clue_grid[x, y]:
         #     return True
     if cell_clue + generate_permutation(empty_neighbors_count) == clue_grid[x, y]:
+        #TODO: add checking of all possible permutations rather than just checking one
+            #change permutation function to listing all possible permutations?
         return True
     return False
 
