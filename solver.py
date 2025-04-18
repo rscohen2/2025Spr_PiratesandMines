@@ -72,9 +72,9 @@ def generate_permutation(n):
     random.shuffle(values)  # Shuffle to get a random permutation
     return values
 
-# Example usage
-permutation = generate_permutation(7)
-print(permutation)
+# # Example usage
+# permutation = generate_permutation(7)
+# print(permutation)
 
 
 def brute_force(grid, puzzle):
@@ -92,7 +92,15 @@ def brute_force(grid, puzzle):
                     if check_clue(x, y, grid, puzzle):
                         continue
                     else:
-                        break
+                        # break
+                        # for i,j in grid where grid[x-i, y-j] == 'l'
+                        for i in range(len(grid)):
+                            for j in range(len(grid[0])):
+                                xi, yj = x - i, y - j
+                                if 0 <= xi < len(grid) and 0 <= yj < len(grid[0]):  # bounds check
+                                    if grid[xi][yj] == 'l':
+:
+
     return grid
 
     #all permutations that might possibly work
