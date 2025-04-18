@@ -87,6 +87,8 @@ def brute_force(grid, puzzle):
         for y in range(cols):
             if grid[x, y] == 'e':
                 grid[x][y] = 't'
+                #TODO resolve this function structure/organization
+                clue = get_clue(x, y, grid, puzzle)
                 if check_clue(x, y, grid, puzzle):
                     continue
                 else:
