@@ -1,3 +1,5 @@
+from itertools import permutations
+
 from generate_puzzle import generate_unsolved_puzzle
 from generate_puzzle import get_clues
 import numpy as np
@@ -57,26 +59,45 @@ def check_clue(cell_clue, clue_grid, empty_neighbors_count,x, y):
         return True
         # if cell_clue + 1*empty_neighbors_count or cell_clue -1*empty_neighbors_count == clue_grid[x, y]:
         #     return True
-    if cell_clue + generate_permutation(empty_neighbors_count) == clue_grid[x, y]:
-        #TODO: add checking of all possible permutations rather than just checking one
-            #change permutation function to listing all possible permutations?
-        return True
+    if empty_neighbors_count > 0:
+        permutation_list = generate_all_permutations(empty_neighbors_count)
+        for permutation in permutation_list:
+
+            if cell_clue + permutation[0] == clue_grid[x, y]:
+                #TODO: add checking of all possible permutations rather than just checking one
+                #change permutation function to listing all possible permutations?
+                return True
+    else:
+        if cell_clue == clue_grid[x, y]:
+            return True
     return False
 
 
 
-def generate_permutation(n):
-    # Choose how many -1s and 1s you want (e.g., equal split)
+# def generate_permutation(n):
+#     # Choose how many -1s and 1s you want (e.g., equal split)
+#     half = n // 2
+#     remainder = n % 2
+#
+#     values = [-1] * half + [1] * half
+#
+#     if remainder:  # If n is odd, add one more randomly
+#         values.append(random.choice([-1, 1]))
+#
+#     random.shuffle(values)  # Shuffle to get a random permutation
+#     return values
+
+def generate_all_permutations(n):
     half = n // 2
     remainder = n % 2
 
     values = [-1] * half + [1] * half
+    if remainder:
+        values.append(1)  # or -1, doesn't matter—both will be included over all perms
 
-    if remainder:  # If n is odd, add one more randomly
-        values.append(random.choice([-1, 1]))
-
-    random.shuffle(values)  # Shuffle to get a random permutation
-    return values
+    # Use set to avoid duplicates
+    all_perms = set(permutations(values))
+    return list(all_perms)
 
 # # Example usage
 # permutation = generate_permutation(7)
@@ -112,7 +133,8 @@ def brute_force(grid, puzzle):
                                         grid[xi][yj] = 't'
                                     if grid[xi][yj] == 't':
                                         grid[xi][yj] = 'l'
-                                if check_clue(xi, yj, grid, puzzle):
+                                if check_clue(cell_clue, puzzle, empty_neighbors_count, xi, yj):
+                                   # check_clue(cell_clue, clue_grid, empty_neighbors_count, x, y):
                                     continue
                                 if check_board_full(grid):
                                     if validate_entire_grid(grid, puzzle):
