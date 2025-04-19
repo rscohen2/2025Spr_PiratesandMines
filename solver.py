@@ -139,6 +139,8 @@ def brute_force(grid, puzzle):
                                 if check_board_full(grid):
                                     if validate_entire_grid(grid, puzzle):
                                         return grid
+                                else:
+                                    continue
 
 
 def check_board_full(grid):
@@ -147,9 +149,9 @@ def check_board_full(grid):
     for x in range(rows):
         for y in range(cols):
             if grid[x][y] == 'e':
-                break
+                return False
             else:
-                continue
+                return True
 
 
 
