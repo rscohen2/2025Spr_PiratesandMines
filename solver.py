@@ -150,8 +150,7 @@ def check_board_full(grid):
         for y in range(cols):
             if grid[x][y] == 'e':
                 return False
-            else:
-                return True
+    return True
 
 
 
@@ -202,7 +201,8 @@ def validate_entire_grid(grid, puzzle):
     rows, cols = grid.shape
     for x in range(rows):
         for y in range(cols):
-            if not check_clue(x, y, puzzle, grid):
+            cell_clue, clue_grid, empty_neighbors_count = get_clue(x, y, grid, puzzle)
+            if not check_clue(cell_clue, puzzle, empty_neighbors_count, x, y):
                 return False
     return True
 
