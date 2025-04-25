@@ -4,8 +4,8 @@ import os
 import json
 
 # Import your puzzle generator code
-from generate_puzzle_orig import PuzzleGenerator
-from solver_orig import PuzzleSolver
+from generate_puzzle import PuzzleGenerator
+from solver import PuzzleSolver
 
 app = Flask(__name__, static_folder='static')
 

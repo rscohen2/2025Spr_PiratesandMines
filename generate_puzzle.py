@@ -196,10 +196,10 @@
 #
 
 
-# generate_puzzle_orig.py
+# generate_puzzle.py
 import numpy as np
 import random
-from solver_orig import PuzzleSolver
+from solver import PuzzleSolver
 
 
 class PuzzleGenerator:
