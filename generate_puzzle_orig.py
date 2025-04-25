@@ -196,7 +196,7 @@
 #
 
 
-# generate_puzzle.py
+# generate_puzzle_orig.py
 import numpy as np
 import random
 from solver import PuzzleSolver

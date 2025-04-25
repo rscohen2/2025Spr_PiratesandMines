@@ -1,4 +1,4 @@
-from generate_puzzle import PuzzleGenerator
+from generate_puzzle_orig import PuzzleGenerator
 import numpy as np
 
 

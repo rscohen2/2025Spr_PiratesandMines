@@ -1,5 +1,5 @@
 from solver import PuzzleSolver
-from generate_puzzle import PuzzleGenerator
+from generate_puzzle_orig import PuzzleGenerator
 
 # Generate a puzzle
 if __name__ == "__main__":

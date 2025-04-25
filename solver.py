@@ -226,6 +226,9 @@
 # solver.py
 import numpy as np
 
+from run import generator
+from generate_puzzle_orig import PuzzleGenerator
+
 
 class PuzzleSolver:
     def __init__(self, clue_grid):
@@ -239,27 +242,28 @@ class PuzzleSolver:
         self._solve(0, 0, np.full((self.size, self.size), 'e'))
         return self.solution_count
 
-    def _solve(self, row, col, grid):
+    def solve(self, row, col, grid):
         """Recursive backtracking solver"""
         if row == self.size:
             if self._validate_solution(grid):
                 self.solution_count += 1
                 self.solutions.append(grid.copy())
-            return
+            return self.solutions
+
 
         next_row = row + 1 if col == self.size - 1 else row
         next_col = col + 1 if col < self.size - 1 else 0
 
         if self.clue_grid[row][col] != '?':
             # Cell with clue - skip
-            self._solve(next_row, next_col, grid)
+            self.solve(next_row, next_col, grid)
             return
 
         # Try both possibilities
         for value in ['t', 'l']:
             if self._is_valid_placement(row, col, value, grid):
                 grid[row][col] = value
-                self._solve(next_row, next_col, grid)
+                self.solve(next_row, next_col, grid)
                 grid[row][col] = '?'  # Backtrack
 
     def _is_valid_placement(self, row, col, value, grid):
@@ -298,3 +302,10 @@ class PuzzleSolver:
                     if self._calculate_clue(i, j, grid) != self.clue_grid[i][j]:
                         return False
         return True
+
+if __name__ == "__main__":
+    generator = PuzzleGenerator(size=9, difficulty='medium')
+    # puzzle, solution = generator.create_puzzle()
+    puzzle = [['','_',0],['_',1,'_'],['_',-1,-1]]
+
+    solution = PuzzleSolver.solve(0, 0, np.full((puzzle.size, puzzle.size)))
