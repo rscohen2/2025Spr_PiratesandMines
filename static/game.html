@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Hunt Puzzle</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            background-image: linear-gradient(to bottom right, #ffdc73, #ffa940);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #ff8c00;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #ff8c00;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.2rem;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .game-info div {
+            font-weight: bold;
+        }
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(var(--grid-size), 1fr);
+            gap: 5px;
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .grid-container {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .cell {
+            aspect-ratio: 1 / 1;
+            background-color: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .puzzle-grid .cell {
+            cursor: default;
+        }
+        
+        .player-grid .cell {
+            cursor: pointer;
+        }
+        
+        .player-grid .cell:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .cell.positive {
+            color: #155724;
+        }
+        
+        .cell.negative {
+            color: #721c24;
+        }
+        
+        .cell.zero {
+            color: #0c5460;
+        }
+        
+        .cell.empty {
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+        
+        .cell.treasure {
+            background-color: #d4edda;
+            color: #155724;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='%23ffc107' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-12.5c0 .83-.67 1.5-1.5 1.5S7 8.33 7 7.5 7.67 6 8.5 6s1.5.67 1.5 1.5zM12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm4.5-3.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 70%;
+        }
+        
+        .cell.mine {
+            background-color: #f8d7da;
+            color: #721c24;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='%23dc3545' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L12 12.17 7.41 7.59 6 9l4.59 4.59L6 18.17l1.41 1.41L12 15l4.59 4.59 1.41-1.41-4.59-4.59L18 9l-1.41-1.42z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 70%;
+        }
+        
+        .cell-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+        
+        .tools {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .tool-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .tool-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .tool-button.active {
+            background-color: #ffe0b2;
+        }
+        
+        .tool-icon {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 5px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #e67e00;
+        }
+        
+        button.secondary {
+            background-color: #6c757d;
+        }
+        
+        button.secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .game-message {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .game-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .game-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 600px) {
+            .cell {
+                font-size: 18px;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Treasure Hunt Puzzle</h1>
+        
+        <div class="game-info">
+            <div>Size: <span id="game-size">9×9</span></div>
+            <div>Difficulty: <span id="game-difficulty">Medium</span></div>
+            <div>Score: <span id="game-score">0</span></div>
+        </div>
+        
+        <div class="grid-container">
+            <h2>Puzzle</h2>
+            <div id="puzzle-grid" class="game-grid puzzle-grid"></div>
+        </div>
+        
+        <div class="tools">
+            <div id="treasure-tool" class="tool-button active">
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" width="100%" height="100%">
+                        <path fill="#ffc107" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-12.5c0 .83-.67 1.5-1.5 1.5S7 8.33 7 7.5 7.67 6 8.5 6s1.5.67 1.5 1.5zM12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm4.5-3.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5z"/>
+                    </svg>
+                </div>
+                <div>Treasure (+1)</div>
+            </div>
+            <div id="mine-tool" class="tool-button">
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" width="100%" height="100%">
+                        <path fill="#dc3545" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L12 12.17 7.41 7.59 6 9l4.59 4.59L6 18.17l1.41 1.41L12 15l4.59 4.59 1.41-1.41-4.59-4.59L18 9l-1.41-1.42z"/>
+                    </svg>
+                </div>
+                <div>Mine (-1)</div>
+            </div>
+            <div id="empty-tool" class="tool-button">
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" width="100%" height="100%">
+                        <path fill="#6c757d" d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                </div>
+                <div>Empty (0)</div>
+            </div>
+        </div>
+        
+        <div class="grid-container">
+            <h2>Your Solution</h2>
+            <div id="player-grid" class="game-grid player-grid"></div>
+        </div>
+        
+        <div id="game-message" class="game-message"></div>
+        
+        <div class="controls">
+            <button id="restart-button" class="secondary">Restart</button>
+            <button id="undo-button" class="secondary">Undo</button>
+            <button id="verify-solution">Verify Solution</button>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            size: 9,
+            difficulty: 'medium',
+            score: 0,
+            puzzleGrid: [],
+            solution: [],
+            currentTool: 'treasure', // 'treasure', 'mine', or 'empty'
+            moves: [] // For undo functionality
+        };
+        
+        // Initialize game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load game settings from localStorage
+            if (localStorage.getItem('puzzleSize')) {
+                gameState.size = parseInt(localStorage.getItem('puzzleSize'));
+            }
+            
+            if (localStorage.getItem('puzzleDifficulty')) {
+                gameState.difficulty = localStorage.getItem('puzzleDifficulty');
+            }
+            
+            // Update UI with settings
+            document.getElementById('game-size').textContent = `${gameState.size}×${gameState.size}`;
+            document.getElementById('game-difficulty').textContent = gameState.difficulty.charAt(0).toUpperCase() + gameState.difficulty.slice(1);
+            
+            // Set grid size in CSS
+            document.documentElement.style.setProperty('--grid-size', gameState.size);
+            
+            // Initialize puzzle
+            initializePuzzle();
+            
+            // Set up event listeners
+            document.getElementById('treasure-tool').addEventListener('click', function() {
+                setCurrentTool('treasure');
+            });
+            
+            document.getElementById('mine-tool').addEventListener('click', function() {
+                setCurrentTool('mine');
+            });
+            
+            document.getElementById('empty-tool').addEventListener('click', function() {
+                setCurrentTool('empty');
+            });
+            
+            document.getElementById('restart-button').addEventListener('click', function() {
+                if (confirm('Are you sure you want to return to the start page?')) {
+                    window.location.href = 'index.html';
+                }
+            });
+            
+            document.getElementById('undo-button').addEventListener('click', undoLastMove);
+            document.getElementById('verify-solution').addEventListener('click', verifySolution);
+        });
+        
+        // Set current tool
+        function setCurrentTool(tool) {
+            gameState.currentTool = tool;
+            
+            // Update UI
+            document.getElementById('treasure-tool').classList.toggle('active', tool === 'treasure');
+            document.getElementById('mine-tool').classList.toggle('active', tool === 'mine');
+            document.getElementById('empty-tool').classList.toggle('active', tool === 'empty');
+        }
+        
+        // Function to generate a puzzle from the server
+        async function fetchPuzzle(size, difficulty) {
+            try {
+                const response = await fetch('/api/generate_puzzle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ size, difficulty })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to generate puzzle');
+                }
+                
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching puzzle:', error);
+                return null;
+            }
+        }
+
+        // Function to verify solution on the server
+        async function verifySolution(playerGrid, puzzleGrid) {
+            try {
+                const response = await fetch('/api/verify_solution', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ playerGrid, puzzleGrid })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to verify solution');
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error verifying solution:', error);
+                return { valid: false, score: 0 };
+            }
+        }
+        // Initialize puzzle
+        function initializePuzzle() {
+            // Example puzzle matrix (from the provided example)
+            const examplePuzzle = [
+                ['1', '?', '?', '-1', '1', '0', '1', '?', '?'],
+                ['1', '-1', '?', '0', '?', '1', '-1', '?', '-1'],
+                ['?', '?', '?', '-1', '1', '-1', '-1', '-1', '?'],
+                ['?', '0', '-1', '-1', '-2', '?', '?', '?', '0'],
+                ['1', '0', '-1', '?', '?', '?', '-3', '0', '1'],
+                ['0', '1', '0', '-1', '-2', '?', '?', '?', '?'],
+                ['0', '?', '0', '-1', '-1', '-1', '-2', '-1', '2'],
+                ['?', '?', '?', '?', '?', '-3', '?', '0', '?'],
+                ['-1', '-1', '-2', '?', '?', '?', '-2', '0', '1']
+            ];
+            
+            // In a real implementation, you would generate this from your Python PuzzleGenerator class
+            gameState.puzzleGrid = examplePuzzle;
+            
+            // Initialize player's grid (all empty)
+            gameState.playerGrid = Array(gameState.size).fill().map(() => Array(gameState.size).fill('empty'));
+            
+            // Render both grids
+            renderPuzzleGrid();
+            renderPlayerGrid();
+        }
+        
+        // Render the puzzle grid
+        function renderPuzzleGrid() {
+            const puzzleGridElement = document.getElementById('puzzle-grid');
+            puzzleGridElement.innerHTML = '';
+            
+            for (let i = 0; i < gameState.size; i++) {
+                for (let j = 0; j < gameState.size; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    const cellContent = document.createElement('div');
+                    cellContent.className = 'cell-content';
+                    
+                    const value = gameState.puzzleGrid[i][j];
+                    
+                    if (value === '?') {
+                        // This is a cell to be filled
+                        cell.classList.add('empty');
+                        cellContent.textContent = '?';
+                    } else {
+                        // This is a clue cell
+                        cellContent.textContent = value;
+                        
+                        // Add color based on value
+                        const numValue = parseInt(value);
+                        if (numValue > 0) {
+                            cell.classList.add('positive');
+                        } else if (numValue < 0) {
+                            cell.classList.add('negative');
+                        } else {
+                            cell.classList.add('zero');
+                        }
+                    }
+                    
+                    cell.appendChild(cellContent);
+                    puzzleGridElement.appendChild(cell);
+                }
+            }
+        }
+        
+        // Render the player grid
+        function renderPlayerGrid() {
+            const playerGridElement = document.getElementById('player-grid');
+            playerGridElement.innerHTML = '';
+            
+            for (let i = 0; i < gameState.size; i++) {
+                for (let j = 0; j < gameState.size; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    
+                    const cellContent = document.createElement('div');
+                    cellContent.className = 'cell-content';
+                    
+                    // Set cell class based on player's selection
+                    if (gameState.playerGrid[i][j] === 'treasure') {
+                        cell.classList.add('treasure');
+                    } else if (gameState.playerGrid[i][j] === 'mine') {
+                        cell.classList.add('mine');
+                    }
+                    
+                    // Add click event listener
+                    cell.addEventListener('click', handlePlayerCellClick);
+                    
+                    cell.appendChild(cellContent);
+                    playerGridElement.appendChild(cell);
+                }
+            }
+        }
+        
+        // Handle player cell click
+        function handlePlayerCellClick(event) {
+            const cell = event.currentTarget;
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+            
+            // Record move for undo functionality
+            gameState.moves.push({
+                row: row,
+                col: col,
+                prevValue: gameState.playerGrid[row][col]
+            });
+            
+            // Update player grid with current tool
+            gameState.playerGrid[row][col] = gameState.currentTool;
+            
+            // Re-render player grid
+            renderPlayerGrid();
+            
+            // Hide any message
+            document.getElementById('game-message').style.display = 'none';
+        }
+        
+        // Undo last move
+        function undoLastMove() {
+            if (gameState.moves.length === 0) {
+                alert('No moves to undo!');
+                return;
+            }
+            
+            const lastMove = gameState.moves.pop();
+            gameState.playerGrid[lastMove.row][lastMove.col] = lastMove.prevValue;
+            
+            // Re-render player grid
+            renderPlayerGrid();
+        }
+        
+        // Verify the solution
+        function verifySolution() {
+            // In a real implementation, you would compare with the actual solution
+            // For this example, we'll just check if all cells are filled
+            let allFilled = true;
+            let hasError = false;
+            
+            const puzzleGrid = gameState.puzzleGrid;
+            
+            // Example validation logic (would need to be replaced with actual logic)
+            for (let i = 0; i < gameState.size; i++) {
+                for (let j = 0; j < gameState.size; j++) {
+                    if (puzzleGrid[i][j] === '?' && gameState.playerGrid[i][j] === 'empty') {
+                        allFilled = false;
+                    }
+                    
+                    // Simple check for adjacent cells with numeric clues
+                    // This is a simplified version - actual validation would use the PuzzleSolver logic
+                    if (puzzleGrid[i][j] !== '?') {
+                        // Check sum of adjacent cells
+                        let sum = 0;
+                        const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+                        
+                        for (const [dx, dy] of directions) {
+                            const newRow = i + dx;
+                            const newCol = j + dy;
+                            
+                            if (newRow >= 0 && newRow < gameState.size && newCol >= 0 && newCol < gameState.size) {
+                                if (gameState.playerGrid[newRow][newCol] === 'treasure') {
+                                    sum += 1;
+                                } else if (gameState.playerGrid[newRow][newCol] === 'mine') {
+                                    sum -= 1;
+                                }
+                            }
+                        }
+                        
+                        if (sum !== parseInt(puzzleGrid[i][j])) {
+                            hasError = true;
+                        }
+                    }
+                }
+            }
+            
+            // Calculate score
+            let score = 0;
+            for (let i = 0; i < gameState.size; i++) {
+                for (let j = 0; j < gameState.size; j++) {
+                    if (gameState.playerGrid[i][j] === 'treasure') {
+                        score += 1;
+                    } else if (gameState.playerGrid[i][j] === 'mine') {
+                        score -= 1;
+                    }
+                }
+            }
+            
+            // Update score
+            gameState.score = score;
+            document.getElementById('game-score').textContent = score;
+            
+            // Show message
+            const messageElement = document.getElementById('game-message');
+            if (!allFilled) {
+                messageElement.textContent = 'Please fill all cells in the puzzle!';
+                messageElement.className = 'game-message error';
+            } else if (hasError) {
+                messageElement.textContent = 'Your solution does not satisfy all the clues. Try again!';
+                messageElement.className = 'game-message error';
+            } else {
+                messageElement.textContent = 'Congratulations! Your solution is correct.';
+                messageElement.className = 'game-message success';
+            }
+            messageElement.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
