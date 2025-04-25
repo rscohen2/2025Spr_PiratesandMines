@@ -199,7 +199,7 @@
 # generate_puzzle_orig.py
 import numpy as np
 import random
-from solver import PuzzleSolver
+from solver_orig import PuzzleSolver
 
 
 class PuzzleGenerator:

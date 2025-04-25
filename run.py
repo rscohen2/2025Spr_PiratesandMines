@@ -1,4 +1,4 @@
-from solver import PuzzleSolver
+from solver_orig import PuzzleSolver
 from generate_puzzle_orig import PuzzleGenerator
 
 # Generate a puzzle
