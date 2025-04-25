@@ -3,7 +3,6 @@ import numpy as np
 import os
 import json
 
-# Import your puzzle generator code
 from generate_puzzle import PuzzleGenerator
 from solver import PuzzleSolver
 
@@ -35,7 +34,6 @@ def generate_puzzle():
         return jsonify({'error': 'Invalid difficulty. Must be easy, medium, or hard.'}), 400
     
     try:
-        # Generate puzzle using your existing code
         generator = PuzzleGenerator(size=size, difficulty=difficulty)
         puzzle, solution = generator.create_puzzle()
         
@@ -121,7 +119,6 @@ def calculate_score(player_grid):
     return score
 
 if __name__ == '__main__':
-    # Create a static folder for HTML files if it doesn't exist
     os.makedirs('static', exist_ok=True)
     
     # Run the Flask app

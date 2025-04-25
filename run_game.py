@@ -9,5 +9,5 @@ if __name__ == "__main__":
     puzzle, solution = generator.create_puzzle()
     print("Puzzle:")
     print(np.matrix(puzzle))
-    # print("\nSolution:")
-    # print(np.matrix(solution))
+    print("\nSolution:")
+    print(np.matrix(solution))
