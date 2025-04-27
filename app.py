@@ -43,6 +43,12 @@ def generate_puzzle():
         if isinstance(solution, np.ndarray):
             solution = solution.tolist()
         
+        # Print solution to console for debugging
+        print("\n===== PUZZLE SOLUTION =====")
+        for row in solution:
+            print(row)
+        print("===========================\n")
+        
         # Return the puzzle and solution
         return jsonify({
             'puzzle': puzzle,
