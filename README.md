@@ -32,13 +32,43 @@ We chose to utilize an array to represent our puzzle due to it being convenient 
 
 ## Targeted Algorithm Analysis
 When sorted by "Own Time" in the PyCharm Profiler, it looks like 
+![img.png](img.png)
 
+create_puzzle (0.001 s)
+
+Dominant cost for this small 9×9 puzzle. Includes random fill, clue computation, and a full uniqueness check.
+
+_solve recursion (82 calls)
+
+The backtracking solver is naturally the hotspot—each empty cell branches two ways and validates adjacent clues.
+
+Clue functions (_calculate_clues & _get_neighbor_sum)
+
+Even though they’re lightweight here, they’ll scale as O(n²) for an n×n grid.
+
+Optimization Suggestions
+Early Pruning in Solver
+Stop exploring a branch as soon as a clue check fails, rather than validating all neighbors.
+
+Memoize Neighbor Sums
+Cache results of _calculate_clue for cells whose neighborhood hasn’t changed.
+
+Vectorize Clue Calculation
+For initial clue grid, consider NumPy convolution with a kernel [[0,1,0],[1,0,1],[0,1,0]], mapping 't'→+1, 'l'→−1.
+
+Limit Uniqueness Checks
+If only >1 solution matters, modify count_solutions() to bail out as soon as solution_count > 1
 
 ## Big O Analysis
 Our algorithm for the solver would be O(N) or O(N^2) because as the puzzle grid size increases, the puzzle seems to actually being solved faster???
 
+![img_1.png](img_1.png)
 
+When you instantiate the PuzzleGenerator, you allocate two full n×n arrays (self.grid and self.clue_grid), so construction costs O(n²) time and O(n²) space. Filling the grid randomly and computing every clue via _calculate_clues() also takes exactly one pass over all n² cells; since each cell’s neighbor sum inspects only its four orthogonal neighbors, each is constant-time work, and the entire clue computation remains O(n²). The create_puzzle() method simply wraps these O(n²) steps and then calls generate_valid_solution(), which itself does one random-fill pass (O(n²)), one clue pass (O(n²)), and then hands off to the solver to verify uniqueness.
 
+That hand‐off is critical: PuzzleSolver.count_solutions() is a pure backtracking routine over each of the k unknown cells. At each “?” cell it branches in two directions (“t” or “l”), so in the worst case it explores on the order of 2ᵏ partial grids. At each placement it does a constant-time validity check of up to four neighboring clues, and—if you choose to validate the completed grid at the leaves—another O(n²) pass. Altogether, the solver runs in O(2ᵏ · n²) time, with O(k) recursion‐stack space (plus whatever it takes to store any solutions you append).
+
+Because your generator repeatedly invokes this exponential‐time solver until exactly one solution remains, the overall time complexity of puzzle creation is dominated by that backtracking check: on the order of 2ᵏ · n², which is exponential in the number of unknown cells. All of the other methods—initialization, clue computation, neighbor‐summing—are polynomial (O(n²) or O(1)) and become relatively insignificant once k grows.
 
 --------------
 
