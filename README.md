@@ -1,3 +1,42 @@
+# Pirates and Mines
+
+# Puzzle Overview
+
+In this puzzle, you are given a grid of possible sizes 6x6, 8x8 or. In the grid, there are numbers and empty squares. Similar to mindsweeper, the numbers are clues to placement of landmines! Unlike mindsweeper, cells in the grid do not move, and there is also the potential to gain treasure! The objective of the puzzle is to figure out which empty cells are landmines, and which are treasure. 
+
+To solve the puzzle, you use the given number clues to deterministically solve the positions of the mines and treasure squares. For each clue cell, the clue is a sum of the landmines (-1) and treasures (+1) surronding that particular clue cell in all orthogonal directions (up, down, left, right). For instance, a clue of 0 could mean that cell is surronded by two treasures (+2) and two landmines (-2)  2-2= 0. 
+
+# Python Scripts in the Repo
+
+## Puzzle Generation
+This script creates a completed/fully solved puzzle with clues and landmines and treasures filled in, and subsequently removes the landmines and treasures in order to create a puzzle without an answer key. This solver also checks to make sure that there is only one valid solution for the generated puzzle by iterating recursively to see if there is any solution for the puzzle that hasn't already been recorded in its potential solution list.
+
+## Toggle puzzle size and difficulty
+Our scripts can generate varying puzzle sizes and difficulties.
+### Difficulty
+#### Easy
+#### Medium
+#### Hard
+
+### Puzzle Size
+The puzzle can be toggled to be 6x6...
+
+## Solver Script (And Algorithm)
+Our solver script takes an unsolved puzzle and uses a brute force technique to discover the solution. It fills all of the empty cells with treasure, checks to see if any rules/clues are no longer possible/valid with the configuration present after adding the last treasure it input, and then decides whether to change it to a landmine instead. It also uses backtracking to ensure that all clues remain valid.
+
+## Data Structure
+We chose to utilize an array to represent our puzzle due to it being convenient for representing and mapping the grid structure of our puzzle. Each cell has a coordinate x,y pair corresponding to its position in the grid, and allowing us to update the array of our puzzle.
+
+## Targeted Algorithm Analysis
+
+
+## Big O Analysis
+
+
+
+
+--------------
+
 # 2025 Spring Final Projects
 
 Each project from this semester is a public fork linked from this repository.  This is just one of the many assignments students worked on for the course, but this is the *only* one they are permitted to publish openly.
