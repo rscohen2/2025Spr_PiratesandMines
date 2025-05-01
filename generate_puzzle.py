@@ -97,3 +97,4 @@ if __name__ == "__main__":
     print(np.matrix(puzzle))
     print("\nSolution:")
     print(np.matrix(solution))
+    #d
