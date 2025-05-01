@@ -7,11 +7,12 @@ import io
 from solver import PuzzleSolver
 
 class PuzzleGenerator:
-    def __init__(self, size=6, difficulty='medium'):
+    def __init__(self, size=6, difficulty='medium', diagonal = False):
         self.size = size
         self.difficulty = difficulty
         self.grid = np.full((size, size), 'e', dtype=object)
         self.clue_grid = np.zeros((size, size), dtype=int)
+        self.diagonal = diagonal
 
         # Difficulty settings
         self.difficulty_params = {

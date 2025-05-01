@@ -235,6 +235,8 @@
         <div class="game-info">
             <div>Size: <span id="game-size">9×9</span></div>
             <div>Difficulty: <span id="game-difficulty">Medium</span></div>
+            <div>Diagonal: <span id="diagonal">True</span></div>
+
             <div>Score: <span id="game-score">0</span></div>
         </div>
         
@@ -289,6 +291,7 @@
         let gameState = {
             size: 9,
             difficulty: 'medium',
+            diagonal: 'True',
             score: 0,
             puzzleGrid: [],
             solution: [],
@@ -306,11 +309,16 @@
             if (localStorage.getItem('puzzleDifficulty')) {
                 gameState.difficulty = localStorage.getItem('puzzleDifficulty');
             }
+
+            if (localStorage.getItem('diagonal')) {
+                gameState.diagonal = localStorage.getItem('diagonal');
+            }
+
             
             // Update UI with settings
             document.getElementById('game-size').textContent = `${gameState.size}×${gameState.size}`;
             document.getElementById('game-difficulty').textContent = gameState.difficulty.charAt(0).toUpperCase() + gameState.difficulty.slice(1);
-            
+            document.getElementById('diagonal').textContent = gameState.diagonal === 'True' ? 'Yes' : 'No';
             // Set grid size in CSS
             document.documentElement.style.setProperty('--grid-size', gameState.size);
             
@@ -337,7 +345,7 @@
             });
             
             document.getElementById('undo-button').addEventListener('click', undoLastMove);
-            document.getElementById('verify-solution').addEventListener('click', verifySolution);
+            document.getElementById('verify-solution').addEventListener('click', verifySolutionWithServer);
         });
         
         // Set current tool
@@ -378,6 +386,7 @@
             // Get size and difficulty from localStorage
             const size = parseInt(localStorage.getItem('puzzleSize') || 6);
             const difficulty = localStorage.getItem('puzzleDifficulty') || 'medium';
+            const diagonal = localStorage.getItem('diagonal') || 'True';
             
             try {
                 // Call the Flask API to generate a puzzle
@@ -386,7 +395,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ size, difficulty })
+                    body: JSON.stringify({ size, difficulty, diagonal})
                 });
                 
                 if (!response.ok) {
@@ -416,14 +425,15 @@
 
 
         // Function to verify solution on the server
-        async function verifySolution(playerGrid, puzzleGrid) {
+        async function verifySolutionWithServer(playerGrid, puzzleGrid) {
             try {
                 const response = await fetch('/api/verify_solution', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ playerGrid, puzzleGrid })
+                    body: JSON.stringify({ playerGrid, puzzleGrid, diagonal: gameState.diagonal === 'True'
+ })
                 });
                 
                 if (!response.ok) {
@@ -618,7 +628,12 @@
                     if (puzzleGrid[i][j] !== '?') {
                         // Check sum of adjacent cells
                         let sum = 0;
-                        const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+                        const orthogonalDirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+                        const diagonalDirs = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
+                        const directions = (gameState.diagonal === 'True')
+                            ? [...orthogonalDirs, ...diagonalDirs]
+                            : orthogonalDirs;
+                        // const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
                         
                         for (const [dx, dy] of directions) {
                             const newRow = i + dx;

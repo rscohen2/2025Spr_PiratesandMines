@@ -25,6 +25,7 @@ def generate_puzzle():
     data = request.get_json()
     size = int(data.get('size', 6))
     difficulty = data.get('difficulty', 'medium')
+    diagonal = data.get('diagonal', False)
     
     # Validate parameters
     if size not in [4, 6, 8, 9]:
@@ -34,7 +35,7 @@ def generate_puzzle():
         return jsonify({'error': 'Invalid difficulty. Must be easy, medium, or hard.'}), 400
     
     try:
-        generator = PuzzleGenerator(size=size, difficulty=difficulty)
+        generator = PuzzleGenerator(size=size, difficulty=difficulty, diagonal=diagonal)
         puzzle, solution = generator.create_puzzle()
         
         # Convert numpy arrays to lists if needed
@@ -63,6 +64,9 @@ def verify_solution():
     data = request.get_json()
     player_grid = data.get('playerGrid', [])
     puzzle_grid = data.get('puzzleGrid', [])
+    diagonal = data.get('diagonal', False)
+    print(f"Diagonal value from request: {diagonal}")  # Add this debug print
+
     
     try:
         # Convert to numpy arrays for easier processing
@@ -70,7 +74,7 @@ def verify_solution():
         puzzle_grid_np = np.array(puzzle_grid)
         
         # Check if player's solution satisfies all clues
-        is_valid = check_valid_solution(player_grid_np, puzzle_grid_np)
+        is_valid = check_valid_solution(player_grid_np, puzzle_grid_np, diagonal)
         
         # Calculate score
         score = calculate_score(player_grid_np)
@@ -82,7 +86,7 @@ def verify_solution():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-def check_valid_solution(player_grid, puzzle_grid):
+def check_valid_solution(player_grid, puzzle_grid, diagonal):
     """Check if player's solution satisfies all clues"""
     size = len(puzzle_grid)
     
@@ -98,6 +102,10 @@ def check_valid_solution(player_grid, puzzle_grid):
             # Calculate actual sum from player's grid
             actual_value = 0
             directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
+
+            # Add diagonals if enabled
+            if diagonal:
+                directions += [(-1, -1), (-1, 1), (1, -1), (1, 1)]
             
             for dx, dy in directions:
                 nx, ny = i + dx, j + dy

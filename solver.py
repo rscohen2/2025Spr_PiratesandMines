@@ -3,11 +3,12 @@ import numpy as np
 
 
 class PuzzleSolver:
-    def __init__(self, clue_grid):
+    def __init__(self, clue_grid, diagonal = False):
         self.size = len(clue_grid)
         self.clue_grid = np.array(clue_grid)
         self.solution_count = 0
         self.solutions = []
+        self.diagonal = diagonal
 
     def count_solutions(self):
         """Count number of valid solutions"""
@@ -37,33 +38,57 @@ class PuzzleSolver:
                 self._solve(next_row, next_col, grid)
                 grid[row][col] = '?'  # Backtrack
 
-    def _is_valid_placement(self, row, col, value, grid):
+    def _is_valid_placement(self, row, col, value, grid, diagonal):
         """Check if placement maintains validity of all clues"""
         temp_grid = grid.copy()
         temp_grid[row][col] = value
-
+        if not diagonal:
         # Check all adjacent clues
-        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            nx, ny = row + dx, col + dy
-            if 0 <= nx < self.size and 0 <= ny < self.size:
-                if isinstance(self.clue_grid[nx][ny], int):
-                    expected = self.clue_grid[nx][ny]
-                    actual = self._calculate_clue(nx, ny, temp_grid)
-                    if actual > expected or actual < expected:
-                        return False
-        return True
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nx, ny = row + dx, col + dy
+                if 0 <= nx < self.size and 0 <= ny < self.size:
+                    if isinstance(self.clue_grid[nx][ny], int):
+                        expected = self.clue_grid[nx][ny]
+                        actual = self._calculate_clue(nx, ny, temp_grid)
+                        if actual > expected or actual < expected:
+                            return False
+            return True
+        elif diagonal:
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1),
+                           (-1, -1), (-1, 1), (1, -1), (1, 1)]:
+                nx, ny = row + dx, col + dy
+                if 0 <= nx < self.size and 0 <= ny < self.size:
+                    if isinstance(self.clue_grid[nx][ny], int):
+                        expected = self.clue_grid[nx][ny]
+                        actual = self._calculate_clue(nx, ny, temp_grid)
+                        if actual > expected or actual < expected:
+                            return False
+            return True
 
-    def _calculate_clue(self, x, y, grid):
+
+    def _calculate_clue(self, x, y, grid, diagonal):
         """Calculate clue value for a position"""
         total = 0
-        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            nx, ny = x + dx, y + dy
-            if 0 <= nx < self.size and 0 <= ny < self.size:
-                if grid[nx][ny] == 't':
-                    total += 1
-                elif grid[nx][ny] == 'l':
-                    total -= 1
-        return total
+        if not diagonal:
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.size and 0 <= ny < self.size:
+                    if grid[nx][ny] == 't':
+                        total += 1
+                    elif grid[nx][ny] == 'l':
+                        total -= 1
+            return total
+        elif diagonal:
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1),
+                           (-1, -1), (-1, 1), (1, -1), (1, 1)]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.size and 0 <= ny < self.size:
+                    if grid[nx][ny] == 't':
+                        total += 1
+                    elif grid[nx][ny] == 'l':
+                        total -= 1
+            return total
+
 
     def _validate_solution(self, grid):
         """Validate complete solution"""
