@@ -235,7 +235,7 @@
         <div class="game-info">
             <div>Size: <span id="game-size">9×9</span></div>
             <div>Difficulty: <span id="game-difficulty">Medium</span></div>
-            <div>Diagonal: <span id="diagonal">True</span></div>
+            <div>Diagonal: <span id="diagonal">False</span></div>
 
             <div>Score: <span id="game-score">0</span></div>
         </div>
@@ -386,7 +386,7 @@
             // Get size and difficulty from localStorage
             const size = parseInt(localStorage.getItem('puzzleSize') || 6);
             const difficulty = localStorage.getItem('puzzleDifficulty') || 'medium';
-            const diagonal = localStorage.getItem('diagonal') || 'True';
+            const diagonal = localStorage.getItem('diagonal') || 'False';
             
             try {
                 // Call the Flask API to generate a puzzle
@@ -407,6 +407,7 @@
                 // Store the puzzle and solution
                 gameState.puzzleGrid = data.puzzle;
                 gameState.solution = data.solution;
+                gameState.diagonal = data.diagonal
                 
                 // Initialize player's grid (all empty)
                 gameState.playerGrid = Array(gameState.size).fill().map(() => 
@@ -432,7 +433,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ playerGrid, puzzleGrid, diagonal: gameState.diagonal === 'True'
+                    body: JSON.stringify({ playerGrid, puzzleGrid, diagonal: gameState.diagonal
  })
                 });
                 
