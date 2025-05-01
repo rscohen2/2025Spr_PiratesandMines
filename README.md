@@ -1,4 +1,4 @@
-# Pirates and Mines
+# Treasure Hunt and Mines
 
 # Puzzle Overview
 
