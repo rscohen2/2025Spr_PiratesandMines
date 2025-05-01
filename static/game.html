@@ -291,7 +291,7 @@
         let gameState = {
             size: 9,
             difficulty: 'medium',
-            diagonal: 'True',
+            diagonal: 'False',
             score: 0,
             puzzleGrid: [],
             solution: [],
@@ -318,7 +318,13 @@
             // Update UI with settings
             document.getElementById('game-size').textContent = `${gameState.size}×${gameState.size}`;
             document.getElementById('game-difficulty').textContent = gameState.difficulty.charAt(0).toUpperCase() + gameState.difficulty.slice(1);
+            // document.getElementById('diagonal').textContent = gameState.diagonal ? 'Yes' : 'No';
             document.getElementById('diagonal').textContent = gameState.diagonal === 'True' ? 'Yes' : 'No';
+            console.log(typeof gameState.diagonal); // Log type of the value
+
+            // print(gameState.diagonal)
+            console.log(gameState.diagonal); // Log value
+
             // Set grid size in CSS
             document.documentElement.style.setProperty('--grid-size', gameState.size);
             
