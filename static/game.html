@@ -234,7 +234,7 @@
         
         <div class="game-info">
             <div>Size: <span id="game-size">9×9</span></div>
-            <div>Difficulty: <span id="game-difficulty">Medium</span></div>
+<!--            <div>Difficulty: <span id="game-difficulty">Medium</span></div>-->
             <div>Diagonal: <span id="diagonal">False</span></div>
 
             <div>Score: <span id="game-score">0</span></div>
@@ -290,7 +290,7 @@
         // Game state
         let gameState = {
             size: 9,
-            difficulty: 'medium',
+            // difficulty: 'medium',
             diagonal: 'False',
             score: 0,
             puzzleGrid: [],
@@ -306,9 +306,9 @@
                 gameState.size = parseInt(localStorage.getItem('puzzleSize'));
             }
             
-            if (localStorage.getItem('puzzleDifficulty')) {
-                gameState.difficulty = localStorage.getItem('puzzleDifficulty');
-            }
+            // if (localStorage.getItem('puzzleDifficulty')) {
+            //     gameState.difficulty = localStorage.getItem('puzzleDifficulty');
+            // }
 
             if (localStorage.getItem('diagonal')) {
                 gameState.diagonal = localStorage.getItem('diagonal');
@@ -317,7 +317,7 @@
             
             // Update UI with settings
             document.getElementById('game-size').textContent = `${gameState.size}×${gameState.size}`;
-            document.getElementById('game-difficulty').textContent = gameState.difficulty.charAt(0).toUpperCase() + gameState.difficulty.slice(1);
+            // document.getElementById('game-difficulty').textContent = gameState.difficulty.charAt(0).toUpperCase() + gameState.difficulty.slice(1);
             // document.getElementById('diagonal').textContent = gameState.diagonal ? 'Yes' : 'No';
             document.getElementById('diagonal').textContent = gameState.diagonal === 'True' ? 'Yes' : 'No';
             console.log(typeof gameState.diagonal); // Log type of the value
@@ -365,14 +365,14 @@
         }
         
         // Function to generate a puzzle from the server
-        async function fetchPuzzle(size, difficulty) {
+        async function fetchPuzzle(size, diagonal) {
             try {
                 const response = await fetch('/api/generate_puzzle', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ size, difficulty })
+                    body: JSON.stringify({ size, diagonal })
                 });
                 
                 if (!response.ok) {
@@ -391,7 +391,7 @@
         async function initializePuzzleFromAPI() {
             // Get size and difficulty from localStorage
             const size = parseInt(localStorage.getItem('puzzleSize') || 6);
-            const difficulty = localStorage.getItem('puzzleDifficulty') || 'medium';
+            // const difficulty = localStorage.getItem('puzzleDifficulty') || 'medium';
             const diagonal = localStorage.getItem('diagonal') || 'False';
             
             try {
@@ -401,7 +401,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ size, difficulty, diagonal})
+                    body: JSON.stringify({ size, diagonal})
                 });
                 
                 if (!response.ok) {
