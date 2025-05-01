@@ -13,22 +13,23 @@ class PuzzleGenerator:
         self.clue_grid = np.zeros((size, size), dtype=int)
         self.diagonal = diagonal
 
-        # Difficulty settings
-        self.difficulty_params = {
-            'easy': {'mine_prob': 0.2, 'treasure_prob': 0.3},
-            'medium': {'mine_prob': 0.3, 'treasure_prob': 0.2},
-            'hard': {'mine_prob': 0.4, 'treasure_prob': 0.1}
-        }
+        # # Difficulty settings
+        # self.difficulty_params = {
+        #     'easy': {'mine_prob': 0.2, 'treasure_prob': 0.3},
+        #     'medium': {'mine_prob': 0.3, 'treasure_prob': 0.2},
+        #     'hard': {'mine_prob': 0.4, 'treasure_prob': 0.1}
+        # }
+        self.params = {params: {'mine_prob': 0.5, 'treasure_prob': 0.5}}
+
 
     def generate_valid_solution(self):
         """Generates a valid puzzle solution with treasures and mines"""
-        params = self.difficulty_params[self.difficulty]
         for i in range(self.size):
             for j in range(self.size):
                 rand = random.random()
-                if rand < params['mine_prob']:
+                if rand < self.params['mine_prob']:
                     self.grid[i][j] = 'l'
-                elif rand < params['mine_prob'] + params['treasure_prob']:
+                elif rand < self.params['mine_prob'] + self.params['treasure_prob']:
                     self.grid[i][j] = 't'
                 else:
                     self.grid[i][j] = 'e'
