@@ -19,7 +19,7 @@ class PuzzleGenerator:
         #     'medium': {'mine_prob': 0.3, 'treasure_prob': 0.2},
         #     'hard': {'mine_prob': 0.4, 'treasure_prob': 0.1}
         # }
-        self.params = {params: {'mine_prob': 0.5, 'treasure_prob': 0.5}}
+        self.params =  {'mine_prob': 0.5, 'treasure_prob': 0.5}
 
 
     def generate_valid_solution(self):
@@ -56,7 +56,6 @@ class PuzzleGenerator:
         """Calculate sum of orthogonal neighbors"""
         total = 0
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
-
         # Add diagonals if enabled
         if diagonal:
             directions += [(-1, -1), (-1, 1), (1, -1), (1, 1)]
@@ -91,7 +90,7 @@ class PuzzleGenerator:
 
 if __name__ == "__main__":
     # generator = PuzzleGenerator(size=9, difficulty='medium', diagonal = False)
-    generator = PuzzleGenerator(size=3, diagonal = diagonal)
+    generator = PuzzleGenerator(size=3, diagonal = "False")
 
     puzzle, solution = generator.create_puzzle()
     print("Puzzle:")

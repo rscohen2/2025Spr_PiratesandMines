@@ -56,7 +56,7 @@ class PuzzleSolver:
                         actual = self._calculate_clue(nx, ny, temp_grid)
                         if actual > expected or actual < expected:
                             return False
-            return True
+                return True
 
 
     def _calculate_clue(self, x, y, grid, diagonal):
