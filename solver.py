@@ -69,11 +69,11 @@ class PuzzleSolver:
             directions += [(-1, -1), (-1, 1), (1, -1), (1, 1)]
 
         for dx, dy in directions:
-            nx, ny = i + dx, j + dy
-            if 0 <= nx < size and 0 <= ny < size:
-                if player_grid[nx][ny] == 't':
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < self.size and 0 <= ny < self.size:
+                if self.grid[nx][ny] == 't':
                     total += 1
-                elif player_grid[nx][ny] == 'l':
+                elif self.grid[nx][ny] == 'l':
                     total -= 1
             return total
 
