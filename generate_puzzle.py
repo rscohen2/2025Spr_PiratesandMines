@@ -19,7 +19,7 @@ class PuzzleGenerator:
         #     'medium': {'mine_prob': 0.3, 'treasure_prob': 0.2},
         #     'hard': {'mine_prob': 0.4, 'treasure_prob': 0.1}
         # }
-        self.params =  {'mine_prob': 0.5, 'treasure_prob': 0.5}
+        self.params =  {'mine_prob': 0.2, 'treasure_prob': 0.3}
 
 
     def generate_valid_solution(self):
@@ -59,15 +59,14 @@ class PuzzleGenerator:
         # Add diagonals if enabled
         if diagonal:
             directions += [(-1, -1), (-1, 1), (1, -1), (1, 1)]
-
-        for dx, dy in directions:
-            nx, ny = i + dx, j + dy
-            if 0 <= nx < size and 0 <= ny < size:
-                if player_grid[nx][ny] == 't':
-                    total += 1
-                elif player_grid[nx][ny] == 'l':
-                    total -= 1
-            return total
+            for dx, dy in directions:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < self.size and 0 <= ny < self.size:
+                    if self.grid[nx][ny] == 't':
+                        total += 1
+                    elif self.grid[nx][ny] == 'l':
+                        total -= 1
+                return total
 
     def create_puzzle(self):
         """Create the final puzzle matrix"""
