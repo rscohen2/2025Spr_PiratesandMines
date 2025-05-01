@@ -75,12 +75,12 @@ That hand‐off is critical: PuzzleSolver.count_solutions() is a pure backtracki
 Because your generator repeatedly invokes this exponential‐time solver until exactly one solution remains, the overall time complexity of puzzle creation is dominated by that backtracking check: on the order of 2ᵏ · n², which is exponential in the number of unknown cells. All of the other methods—initialization, clue computation, neighbor‐summing—are polynomial (O(n²) or O(1)) and become relatively insignificant once k grows.
 
 --------------
-###Indiviual Contributions to the Project:
-##Becca
+## Indiviual Contributions to the Project:
+### Becca
 Developed the puzzle concept and structured a basic generator and solver for a sample puzzle, outlined backtracking algorithm that was implemented and debugged by Vedant. Implemented the diagonal toggle portion of the code into the generator, solver and the UI. Led project management/task delegation. Wrote the ReadMe and outline for presentation.
-##Ke
+### Ke
 Created an original UI for the project using Flask that allows dynamic visualization of puzzle solving, validating and puzzle toggle options. 
-##Vedant
+### Vedant
 Improved Becca's basic solver to work on dynamic puzzle sizes, and created a working backtracker algorithm. Led and completed the Big-O and algorithm efficency analysis.
 
 
