@@ -3,7 +3,7 @@ import numpy as np
 
 
 if __name__ == "__main__":
-    grid_size = int(input("Enter the grid size (n x n): "))
+    grid_size = int(input("Enter the grid size: enter your n for (n x n): "))
     difficulty = input("Enter the difficulty (easy, medium, hard): ").lower()
     generator = PuzzleGenerator(size = grid_size, difficulty = difficulty)
     puzzle, solution = generator.create_puzzle()
