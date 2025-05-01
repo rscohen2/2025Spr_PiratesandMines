@@ -2,7 +2,7 @@
 
 # Puzzle Overview
 
-In this puzzle, you are given a grid of possible sizes 3x3 to 9x9. In the grid, there are numbers and empty squares. Similar to mindsweeper, the numbers are clues to placement of landmines! Unlike mindsweeper, cells in the grid do not move, and there is also the potential to gain treasure! The objective of the puzzle is to figure out which empty cells are landmines, and which are treasure. 
+In this puzzle, you are given a grid of possible sizes 4x4 to 9x9. In the grid, there are numbers and empty squares. Similar to mindsweeper, the numbers are clues to placement of landmines! Unlike mindsweeper, cells in the grid do not move, and there is also the potential to gain treasure! The objective of the puzzle is to figure out which empty cells are landmines, and which are treasure. 
 
 To solve the puzzle, you use the given number clues to deterministically solve the positions of the mines and treasure squares. For each clue cell, the clue is a sum of the landmines (-1) and treasures (+1) surronding that particular clue cell in all orthogonal directions (up, down, left, right). For instance, a clue of 0 could mean that cell is surronded by two treasures (+2) and two landmines (-2)  2-2= 0. 
 
@@ -19,7 +19,7 @@ Our scripts can generate varying puzzle sizes and difficulties.
 #### Hard
 
 ### Puzzle Size
-The puzzle can be toggled to any size from 3x3 to 9x9.
+The puzzle can be toggled to any size from 4x4 to 9x9.
 
 ## Solver Script (And Algorithm)
 Our solver script takes an unsolved puzzle and uses a brute force technique to discover the solution. It fills all of the empty cells with treasure, checks to see if any rules/clues are no longer possible/valid with the configuration present after adding the last treasure it input, and then decides whether to change it to a landmine instead. It also uses backtracking to ensure that all clues remain valid.
