@@ -154,12 +154,11 @@
     <script>
         document.getElementById('start-game').addEventListener('click', function() {
             const size = document.getElementById('size').value;
-            const difficulty = document.getElementById('difficulty').value;
-            const diagonal = document.getElementById('diagonal').value;
+             const diagonal = document.getElementById('diagonal').value;
             
             // Store game settings in localStorage or pass as URL parameters
             localStorage.setItem('puzzleSize', size);
-            localStorage.setItem('puzzleDifficulty', difficulty);
+            // localStorage.setItem('puzzleDifficulty', difficulty);
             localStorage.setItem('puzzlediagonal', diagonal);
             
             // Redirect to the game page
