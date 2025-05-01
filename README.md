@@ -19,7 +19,7 @@ Our scripts can generate varying puzzle sizes and difficulties.
 #### Hard
 
 ### Puzzle Size
-The puzzle can be toggled to any size from 3x3 to 9x9.
+The puzzle can be toggled to any size from 4x4 to 9x9.
 
 ## Solver Script (And Algorithm)
 Our solver script takes an unsolved puzzle and uses a brute force technique to discover the solution. It fills all of the empty cells with treasure, checks to see if any rules/clues are no longer possible/valid with the configuration present after adding the last treasure it input, and then decides whether to change it to a landmine instead. It also uses backtracking to ensure that all clues remain valid.
