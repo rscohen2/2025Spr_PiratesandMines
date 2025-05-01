@@ -311,7 +311,7 @@
             // }
 
             if (localStorage.getItem('diagonal')) {
-                gameState.diagonal = localStorage.getItem('diagonal');
+                gameState.diagonal = localStorage.getItem('diagonal') === 'True';
             }
 
             
@@ -319,7 +319,7 @@
             document.getElementById('game-size').textContent = `${gameState.size}×${gameState.size}`;
             // document.getElementById('game-difficulty').textContent = gameState.difficulty.charAt(0).toUpperCase() + gameState.difficulty.slice(1);
             // document.getElementById('diagonal').textContent = gameState.diagonal ? 'Yes' : 'No';
-            document.getElementById('diagonal').textContent = gameState.diagonal === 'True' ? 'Yes' : 'No';
+            document.getElementById('diagonal').textContent = gameState.diagonal? 'Yes' : 'No';
             console.log(typeof gameState.diagonal); // Log type of the value
 
             // print(gameState.diagonal)

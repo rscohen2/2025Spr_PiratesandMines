@@ -64,7 +64,7 @@ def verify_solution():
     data = request.get_json()
     player_grid = data.get('playerGrid', [])
     puzzle_grid = data.get('puzzleGrid', [])
-    diagonal = data.get('diagonal', False)
+    diagonal = data.get('diagonal', [])
     print(f"Diagonal value from request: {diagonal}")  # Add this debug print
 
     

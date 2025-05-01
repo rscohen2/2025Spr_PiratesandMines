@@ -89,7 +89,10 @@ class PuzzleGenerator:
 
 if __name__ == "__main__":
     # generator = PuzzleGenerator(size=9, difficulty='medium', diagonal = False)
-    generator = PuzzleGenerator(size=3, diagonal = "False")
+    # generator = PuzzleGenerator(size=3, diagonal = "False")
+    # generator = PuzzleGenerator(size=3, diagonal = 'False')
+    generator = PuzzleGenerator(size=3, diagonal = True)
+
 
     puzzle, solution = generator.create_puzzle()
     print("Puzzle:")
