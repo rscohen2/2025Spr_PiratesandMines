@@ -42,9 +42,13 @@ class PuzzleSolver:
         """Check if placement maintains validity of all clues"""
         temp_grid = grid.copy()
         temp_grid[row][col] = value
-        if not diagonal:
-        # Check all adjacent clues
-            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
+
+        # Add diagonals if enabled
+        if diagonal:
+            directions += [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+        for dx, dy in directions:
                 nx, ny = row + dx, col + dy
                 if 0 <= nx < self.size and 0 <= ny < self.size:
                     if isinstance(self.clue_grid[nx][ny], int):
@@ -52,41 +56,25 @@ class PuzzleSolver:
                         actual = self._calculate_clue(nx, ny, temp_grid)
                         if actual > expected or actual < expected:
                             return False
-            return True
-        elif diagonal:
-            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1),
-                           (-1, -1), (-1, 1), (1, -1), (1, 1)]:
-                nx, ny = row + dx, col + dy
-                if 0 <= nx < self.size and 0 <= ny < self.size:
-                    if isinstance(self.clue_grid[nx][ny], int):
-                        expected = self.clue_grid[nx][ny]
-                        actual = self._calculate_clue(nx, ny, temp_grid)
-                        if actual > expected or actual < expected:
-                            return False
-            return True
+                return True
 
 
     def _calculate_clue(self, x, y, grid, diagonal):
         """Calculate clue value for a position"""
         total = 0
-        if not diagonal:
-            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < self.size and 0 <= ny < self.size:
-                    if grid[nx][ny] == 't':
-                        total += 1
-                    elif grid[nx][ny] == 'l':
-                        total -= 1
-            return total
-        elif diagonal:
-            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1),
-                           (-1, -1), (-1, 1), (1, -1), (1, 1)]:
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < self.size and 0 <= ny < self.size:
-                    if grid[nx][ny] == 't':
-                        total += 1
-                    elif grid[nx][ny] == 'l':
-                        total -= 1
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
+
+        # Add diagonals if enabled
+        if diagonal:
+            directions += [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < self.size and 0 <= ny < self.size:
+                if self.grid[nx][ny] == 't':
+                    total += 1
+                elif self.grid[nx][ny] == 'l':
+                    total -= 1
             return total
 
 

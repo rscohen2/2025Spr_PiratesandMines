@@ -24,18 +24,18 @@ def generate_puzzle():
     # Get parameters from request
     data = request.get_json()
     size = int(data.get('size', 6))
-    difficulty = data.get('difficulty', 'medium')
+    # difficulty = data.get('difficulty', 'medium')
     diagonal = data.get('diagonal', False)
     
     # Validate parameters
     if size not in [4, 6, 8, 9]:
         return jsonify({'error': 'Invalid size. Must be 4, 6, 8, or 9.'}), 400
     
-    if difficulty not in ['easy', 'medium', 'hard']:
-        return jsonify({'error': 'Invalid difficulty. Must be easy, medium, or hard.'}), 400
+    # if difficulty not in ['easy', 'medium', 'hard']:
+    #     return jsonify({'error': 'Invalid difficulty. Must be easy, medium, or hard.'}), 400
     
     try:
-        generator = PuzzleGenerator(size=size, difficulty=difficulty, diagonal=diagonal)
+        generator = PuzzleGenerator(size=size, diagonal=diagonal)
         puzzle, solution = generator.create_puzzle()
         
         # Convert numpy arrays to lists if needed
@@ -64,7 +64,7 @@ def verify_solution():
     data = request.get_json()
     player_grid = data.get('playerGrid', [])
     puzzle_grid = data.get('puzzleGrid', [])
-    diagonal = data.get('diagonal', False)
+    diagonal = data.get('diagonal', [])
     print(f"Diagonal value from request: {diagonal}")  # Add this debug print
 
     

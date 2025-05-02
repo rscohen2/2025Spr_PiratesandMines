@@ -119,14 +119,14 @@
             </select>
         </div>
         
-        <div class="form-group">
-            <label for="difficulty">Difficulty Level:</label>
-            <select id="difficulty" name="difficulty">
-                <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
-            </select>
-        </div>
+<!--        <div class="form-group">-->
+<!--            <label for="difficulty">Difficulty Level:</label>-->
+<!--            <select id="difficulty" name="difficulty">-->
+<!--                <option value="easy">Easy</option>-->
+<!--                <option value="medium" selected>Medium</option>-->
+<!--                <option value="hard">Hard</option>-->
+<!--            </select>-->
+<!--        </div>-->
                <div class="form-group">
             <label for="diagonal">diagonal:</label>
             <select id="diagonal" name="diagonal">
@@ -145,7 +145,6 @@
                 <li>Empty cells show clues - the sum of values of cells above, below, left, and right.</li>
                 <li> OR if you toggle diagonal to True, you will get a more difficult puzzle where you must also sum diagonal cells</li>
                 <li>Use these clues to deduce where treasures and landmines are located.</li>
-                <li> Be careful not to count placed treasures or landmines when calculating if a clue is met. </li>
                 <li>Your goal is to correctly identify all treasures and landmines.</li>
             </ul>
         </div>
@@ -154,12 +153,11 @@
     <script>
         document.getElementById('start-game').addEventListener('click', function() {
             const size = document.getElementById('size').value;
-            const difficulty = document.getElementById('difficulty').value;
-            const diagonal = document.getElementById('diagonal').value;
+             const diagonal = document.getElementById('diagonal').value;
             
             // Store game settings in localStorage or pass as URL parameters
             localStorage.setItem('puzzleSize', size);
-            localStorage.setItem('puzzleDifficulty', difficulty);
+            // localStorage.setItem('puzzleDifficulty', difficulty);
             localStorage.setItem('puzzlediagonal', diagonal);
             
             // Redirect to the game page
@@ -168,3 +166,4 @@
     </script>
 </body>
 </html>
+#d
