@@ -101,6 +101,7 @@
         .rules li {
             margin-bottom: 8px;
         }
+        
     </style>
 </head>
 <body>
@@ -119,22 +120,36 @@
             </select>
         </div>
         
-<!--        <div class="form-group">-->
+       <!-- <div class="form-group">-->
 <!--            <label for="difficulty">Difficulty Level:</label>-->
 <!--            <select id="difficulty" name="difficulty">-->
 <!--                <option value="easy">Easy</option>-->
 <!--                <option value="medium" selected>Medium</option>-->
 <!--                <option value="hard">Hard</option>-->
-<!--            </select>-->
-<!--        </div>-->
-               <div class="form-group">
-            <label for="diagonal">diagonal:</label>
+<!--            </select> -->
+<!--        </div> -->
+               <!-- <div class="form-group"> -->
+            <!-- <label for="diagonal">diagonal:</label>
             <select id="diagonal" name="diagonal">
-                <!-- <option value="3">3×3</option> -->
+                <option value="3">3×3</option>
                 <option value="False">False</option>
                 <option value="True" selected>True</option>
+            </select> -->
+            <!-- <div class="form-group">
+                <label for="diagonal">Counting Mode:</label>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="diagonal" name="diagonal">
+                    <label for="diagonal">Include diagonal neighbors in clue calculations</label>
+                </div>
+            </div> -->
+        <div class="form-group">
+            <label for="countingMode">Counting Mode:</label>
+            <select id="countingMode" name="countingMode">
+                <option value="orthogonal" selected>Orthogonal (4 directions)</option>
+                <option value="diagonal">Diagonal (8 directions)</option>
             </select>
         </div>
+        <!-- </div> -->
         
         <button id="start-game">Start Game</button>
         
@@ -153,12 +168,13 @@
     <script>
         document.getElementById('start-game').addEventListener('click', function() {
             const size = document.getElementById('size').value;
-             const diagonal = document.getElementById('diagonal').value;
+            const countingMode = document.getElementById('countingMode').value;
+            const diagonal = countingMode === 'diagonal';
             
             // Store game settings in localStorage or pass as URL parameters
             localStorage.setItem('puzzleSize', size);
             // localStorage.setItem('puzzleDifficulty', difficulty);
-            localStorage.setItem('puzzlediagonal', diagonal);
+            localStorage.setItem('puzzleDiagonal', diagonal.toString());
             
             // Redirect to the game page
             window.location.href = '/game';
@@ -166,4 +182,3 @@
     </script>
 </body>
 </html>
-#d

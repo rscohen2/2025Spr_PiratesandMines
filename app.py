@@ -53,7 +53,8 @@ def generate_puzzle():
         # Return the puzzle and solution
         return jsonify({
             'puzzle': puzzle,
-            'solution': solution
+            'solution': solution,
+            'diagonal': diagonal
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -61,32 +62,54 @@ def generate_puzzle():
 @app.route('/api/verify_solution', methods=['POST'])
 def verify_solution():
     """API endpoint to verify a player's solution"""
-    data = request.get_json()
-    player_grid = data.get('playerGrid', [])
-    puzzle_grid = data.get('puzzleGrid', [])
-    diagonal = data.get('diagonal', [])
-    print(f"Diagonal value from request: {diagonal}")  # Add this debug print
-
-    
     try:
+        data = request.get_json()
+        player_grid = data.get('playerGrid', [])
+        solution = data.get('solution', [])
+        
+        print("Received verification request:")
+        print(f"Player grid shape: {len(player_grid)}x{len(player_grid[0]) if player_grid else 0}")
+        print(f"Solution shape: {len(solution)}x{len(solution[0]) if solution else 0}")
+        
         # Convert to numpy arrays for easier processing
         player_grid_np = np.array(player_grid)
-        puzzle_grid_np = np.array(puzzle_grid)
+        solution_np = np.array(solution)
         
-        # Check if player's solution satisfies all clues
-        is_valid = check_valid_solution(player_grid_np, puzzle_grid_np, diagonal)
+        # Check if player solution matches the correct solution
+        is_valid = True
+        size = len(solution)
         
-        # Calculate score
-        score = calculate_score(player_grid_np)
+        for i in range(size):
+            for j in range(size):
+                # Skip clue cells in the puzzle
+                if solution_np[i][j] == 'e':
+                    continue
+                
+                # Check if player's choice matches the solution
+                if solution_np[i][j] == 't' and player_grid_np[i][j] != 'treasure':
+                    print(f"Mismatch at ({i},{j}): Expected treasure, got {player_grid_np[i][j]}")
+                    is_valid = False
+                    break
+                if solution_np[i][j] == 'l' and player_grid_np[i][j] != 'mine':
+                    print(f"Mismatch at ({i},{j}): Expected mine, got {player_grid_np[i][j]}")
+                    is_valid = False
+                    break
+            
+            if not is_valid:
+                break
+        
+        print(f"Verification result: {'Valid' if is_valid else 'Invalid'}")
         
         return jsonify({
-            'valid': is_valid,
-            'score': score
+            'valid': is_valid
         })
     except Exception as e:
+        import traceback
+        print(f"Error in verify_solution: {str(e)}")
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
-def check_valid_solution(player_grid, puzzle_grid, diagonal):
+def check_valid_solution(player_grid, puzzle_grid, diagonal = False):
     """Check if player's solution satisfies all clues"""
     size = len(puzzle_grid)
     

@@ -66,7 +66,7 @@ class PuzzleGenerator:
                     total += 1
                 elif self.grid[nx][ny] == 'l':
                     total -= 1
-            return total
+        return total
 
     def create_puzzle(self):
         """Create the final puzzle matrix"""

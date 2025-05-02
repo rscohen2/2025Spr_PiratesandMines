@@ -223,7 +223,7 @@
             
             .game-info {
                 flex-direction: column;
-                gap: 10px;
+                gap: 20px;
             }
         }
     </style>
@@ -235,9 +235,9 @@
         <div class="game-info">
             <div>Size: <span id="game-size">9×9</span></div>
 <!--            <div>Difficulty: <span id="game-difficulty">Medium</span></div>-->
-            <div>Diagonal: <span id="diagonal">False</span></div>
+            <div>Mode: <span id="game-mode">Orthogonal</span></div>
 
-            <div>Score: <span id="game-score">0</span></div>
+            <!-- <div>Score: <span id="game-score">0</span></div> -->
         </div>
         
         <div class="grid-container">
@@ -289,9 +289,9 @@
     <script>
         // Game state
         let gameState = {
-            size: 9,
+            size: 6,
             // difficulty: 'medium',
-            diagonal: 'False',
+            diagonal: false,
             score: 0,
             puzzleGrid: [],
             solution: [],
@@ -310,8 +310,11 @@
             //     gameState.difficulty = localStorage.getItem('puzzleDifficulty');
             // }
 
-            if (localStorage.getItem('diagonal')) {
-                gameState.diagonal = localStorage.getItem('diagonal') === 'True';
+            if (localStorage.getItem('puzzleDiagonal')) {
+                // Use lowercase 'true' for JavaScript boolean string comparison
+                gameState.diagonal = localStorage.getItem('puzzleDiagonal') === 'true';
+                console.log('Diagonal value:', gameState.diagonal);
+                console.log('Raw value from localStorage:', localStorage.getItem('puzzleDiagonal'));
             }
 
             
@@ -319,11 +322,11 @@
             document.getElementById('game-size').textContent = `${gameState.size}×${gameState.size}`;
             // document.getElementById('game-difficulty').textContent = gameState.difficulty.charAt(0).toUpperCase() + gameState.difficulty.slice(1);
             // document.getElementById('diagonal').textContent = gameState.diagonal ? 'Yes' : 'No';
-            document.getElementById('diagonal').textContent = gameState.diagonal? 'Yes' : 'No';
+            document.getElementById('game-mode').textContent = gameState.diagonal ? 'Diagonal' : 'Orthogonal';
             console.log(typeof gameState.diagonal); // Log type of the value
 
             // print(gameState.diagonal)
-            console.log(gameState.diagonal); // Log value
+            // console.log(gameState.diagonal); // Log value
 
             // Set grid size in CSS
             document.documentElement.style.setProperty('--grid-size', gameState.size);
@@ -392,7 +395,7 @@
             // Get size and difficulty from localStorage
             const size = parseInt(localStorage.getItem('puzzleSize') || 6);
             // const difficulty = localStorage.getItem('puzzleDifficulty') || 'medium';
-            const diagonal = localStorage.getItem('diagonal') || 'False';
+            const diagonal = gameState.diagonal;
             
             try {
                 // Call the Flask API to generate a puzzle
@@ -413,7 +416,7 @@
                 // Store the puzzle and solution
                 gameState.puzzleGrid = data.puzzle;
                 gameState.solution = data.solution;
-                gameState.diagonal = data.diagonal
+                // gameState.diagonal = data.diagonal;
                 
                 // Initialize player's grid (all empty)
                 gameState.playerGrid = Array(gameState.size).fill().map(() => 
@@ -430,55 +433,74 @@
             }
         }
 
-
-        // Function to verify solution on the server
-        async function verifySolutionWithServer(playerGrid, puzzleGrid) {
+        // Verify the solution with server
+        async function verifySolutionWithServer() {
             try {
+                // Check if all puzzle cells are filled
+                let allFilled = true;
+                for (let i = 0; i < gameState.size; i++) {
+                    for (let j = 0; j < gameState.size; j++) {
+                        if (gameState.puzzleGrid[i][j] === '?' && gameState.playerGrid[i][j] === 'empty') {
+                            allFilled = false;
+                            break;
+                        }
+                    }
+                    if (!allFilled) break;
+                }
+                
+                if (!allFilled) {
+                    const messageElement = document.getElementById('game-message');
+                    messageElement.textContent = 'Please fill all cells in the puzzle!';
+                    messageElement.className = 'game-message error';
+                    messageElement.style.display = 'block';
+                    return;
+                }
+                
+                console.log("Sending data to server for verification:", {
+                    playerGrid: gameState.playerGrid,
+                    solution: gameState.solution // This was missing
+                });
+                
+                // Call server to verify solution
                 const response = await fetch('/api/verify_solution', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ playerGrid, puzzleGrid, diagonal: gameState.diagonal
- })
+                    body: JSON.stringify({
+                        playerGrid: gameState.playerGrid,
+                        solution: gameState.solution // This was missing
+                    })
                 });
                 
                 if (!response.ok) {
-                    throw new Error('Failed to verify solution');
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Server error');
                 }
                 
-                return await response.json();
+                const result = await response.json();
+                console.log("Verification result:", result);
+                
+                // Show message
+                const messageElement = document.getElementById('game-message');
+                if (result.valid) {
+                    messageElement.textContent = 'Congratulations! Your solution is correct.';
+                    messageElement.className = 'game-message success';
+                } else {
+                    messageElement.textContent = 'Your solution does not satisfy all the clues. Try again!';
+                    messageElement.className = 'game-message error';
+                }
+                messageElement.style.display = 'block';
+                
             } catch (error) {
                 console.error('Error verifying solution:', error);
-                return { valid: false, score: 0 };
+                const messageElement = document.getElementById('game-message');
+                messageElement.textContent = 'Error verifying solution: ' + error.message;
+                messageElement.className = 'game-message error';
+                messageElement.style.display = 'block';
             }
         }
-        // Initialize puzzle
-        // function initializePuzzle() {
-        //     // Example puzzle matrix (from the provided example)
-        //     const examplePuzzle = [
-        //         ['1', '?', '?', '-1', '1', '0', '1', '?', '?'],
-        //         ['1', '-1', '?', '0', '?', '1', '-1', '?', '-1'],
-        //         ['?', '?', '?', '-1', '1', '-1', '-1', '-1', '?'],
-        //         ['?', '0', '-1', '-1', '-2', '?', '?', '?', '0'],
-        //         ['1', '0', '-1', '?', '?', '?', '-3', '0', '1'],
-        //         ['0', '1', '0', '-1', '-2', '?', '?', '?', '?'],
-        //         ['0', '?', '0', '-1', '-1', '-1', '-2', '-1', '2'],
-        //         ['?', '?', '?', '?', '?', '-3', '?', '0', '?'],
-        //         ['-1', '-1', '-2', '?', '?', '?', '-2', '0', '1']
-        //     ];
-            
-        //     // In a real implementation, you would generate this from your Python PuzzleGenerator class
-        //     gameState.puzzleGrid = examplePuzzle;
-            
-        //     // Initialize player's grid (all empty)
-        //     gameState.playerGrid = Array(gameState.size).fill().map(() => Array(gameState.size).fill('empty'));
-            
-        //     // Render both grids
-        //     renderPuzzleGrid();
-        //     renderPlayerGrid();
-        // }
-        
+    
         // Render the puzzle grid
         function renderPuzzleGrid() {
             const puzzleGridElement = document.getElementById('puzzle-grid');
@@ -614,84 +636,6 @@
             renderPlayerGrid();
         }
         
-        // Verify the solution
-        function verifySolution() {
-            // In a real implementation, you would compare with the actual solution
-            // For this example, we'll just check if all cells are filled
-            let allFilled = true;
-            let hasError = false;
-            
-            const puzzleGrid = gameState.puzzleGrid;
-            
-            // Example validation logic (would need to be replaced with actual logic)
-            for (let i = 0; i < gameState.size; i++) {
-                for (let j = 0; j < gameState.size; j++) {
-                    if (puzzleGrid[i][j] === '?' && gameState.playerGrid[i][j] === 'empty') {
-                        allFilled = false;
-                    }
-                    
-                    // Simple check for adjacent cells with numeric clues
-                    // This is a simplified version - actual validation would use the PuzzleSolver logic
-                    if (puzzleGrid[i][j] !== '?') {
-                        // Check sum of adjacent cells
-                        let sum = 0;
-                        const orthogonalDirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-                        const diagonalDirs = [[-1, -1], [-1, 1], [1, -1], [1, 1]];
-                        const directions = (gameState.diagonal === 'True')
-                            ? [...orthogonalDirs, ...diagonalDirs]
-                            : orthogonalDirs;
-                        // const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-                        
-                        for (const [dx, dy] of directions) {
-                            const newRow = i + dx;
-                            const newCol = j + dy;
-                            
-                            if (newRow >= 0 && newRow < gameState.size && newCol >= 0 && newCol < gameState.size) {
-                                if (gameState.playerGrid[newRow][newCol] === 'treasure') {
-                                    sum += 1;
-                                } else if (gameState.playerGrid[newRow][newCol] === 'mine') {
-                                    sum -= 1;
-                                }
-                            }
-                        }
-                        
-                        if (sum !== parseInt(puzzleGrid[i][j])) {
-                            hasError = true;
-                        }
-                    }
-                }
-            }
-            
-            // Calculate score
-            let score = 0;
-            for (let i = 0; i < gameState.size; i++) {
-                for (let j = 0; j < gameState.size; j++) {
-                    if (gameState.playerGrid[i][j] === 'treasure') {
-                        score += 1;
-                    } else if (gameState.playerGrid[i][j] === 'mine') {
-                        score -= 1;
-                    }
-                }
-            }
-            
-            // Update score
-            gameState.score = score;
-            document.getElementById('game-score').textContent = score;
-            
-            // Show message
-            const messageElement = document.getElementById('game-message');
-            if (!allFilled) {
-                messageElement.textContent = 'Please fill all cells in the puzzle!';
-                messageElement.className = 'game-message error';
-            } else if (hasError) {
-                messageElement.textContent = 'Your solution does not satisfy all the clues. Try again!';
-                messageElement.className = 'game-message error';
-            } else {
-                messageElement.textContent = 'Congratulations! Your solution is correct.';
-                messageElement.className = 'game-message success';
-            }
-            messageElement.style.display = 'block';
-        }
     </script>
 </body>
 </html>
