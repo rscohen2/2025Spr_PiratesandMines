@@ -8,7 +8,7 @@ To solve the puzzle, you use the given number clues to deterministically solve t
 For a version of the puzzle with increased difficulty, you must also consider diagonals, rather than just the orthogonal direction clues.
 
 # How to play
-Clone the repo and run the "app.py" script. Click one of the two links in the output to open the UI for the puzzle in your browser.
+To play the game, first using Python to run the app.py file. Then paste the url http://127.0.0.1:5001 into your browser and open this web. The puzzle game will be showed on your screen. ENJOY!
 
 
 # Python Scripts in the Repo
