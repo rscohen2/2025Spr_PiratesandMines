@@ -59,14 +59,14 @@ class PuzzleGenerator:
         # Add diagonals if enabled
         if diagonal:
             directions += [(-1, -1), (-1, 1), (1, -1), (1, 1)]
-            for dx, dy in directions:
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < self.size and 0 <= ny < self.size:
-                    if self.grid[nx][ny] == 't':
-                        total += 1
-                    elif self.grid[nx][ny] == 'l':
-                        total -= 1
-                return total
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < self.size and 0 <= ny < self.size:
+                if self.grid[nx][ny] == 't':
+                    total += 1
+                elif self.grid[nx][ny] == 'l':
+                    total -= 1
+            return total
 
     def create_puzzle(self):
         """Create the final puzzle matrix"""
@@ -99,4 +99,3 @@ if __name__ == "__main__":
     print(np.matrix(puzzle))
     print("\nSolution:")
     print(np.matrix(solution))
-    #d
