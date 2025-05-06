@@ -13,7 +13,6 @@ class PuzzleSolver:
     def count_solutions(self):
         """Count number of valid solutions"""
 
-        #TODO: tried changing this to ? to see if that is why solution was all es before
         grid =  np.full((self.size, self.size), '?')
 
         # Copy clues into working grid
