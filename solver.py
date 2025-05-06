@@ -54,8 +54,11 @@ class PuzzleSolver:
 
     def _is_valid_placement(self, row, col, value, grid, diagonal):
         """Check if placement maintains validity of all clues"""
-        temp_grid = grid.copy()
-        temp_grid[row][col] = value
+        # temp_grid = grid.copy()
+        # temp_grid[row][col] = value
+        original = grid[row][col]  # Save current value
+        grid[row][col] = value  # Temporarily place the value
+
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
 
         # Add diagonals if enabled
@@ -68,8 +71,10 @@ class PuzzleSolver:
                     if isinstance(self.clue_grid[nx][ny], int):
                         expected = self.clue_grid[nx][ny]
                         actual = self._calculate_clue(nx, ny, temp_grid)
-                        if actual > expected or actual < expected:
+                        if actual != expected:
+                            grid[row][col] = original  # Restore original value
                             return False
+                grid[row][col] = original
                 return True
 
 
