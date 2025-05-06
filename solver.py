@@ -12,7 +12,19 @@ class PuzzleSolver:
 
     def count_solutions(self):
         """Count number of valid solutions"""
-        self._solve(0, 0, np.full((self.size, self.size), 'e'))
+
+        #TODO: tried changing this to ? to see if that is why solution was all es before
+        grid =  np.full((self.size, self.size), '?')
+
+        # Copy clues into working grid
+        for row in range(self.size):
+            for col in range(self.size):
+                if self.clue_grid[row][col] != 'e':
+                    grid[row][col] = self.clue_grid[row][col]
+                else:
+                    continue
+        solution = self._solve(0,0,grid)
+        # self._solve(0, 0, np.full((self.size, self.size), 'e'))
         return self.solution_count
 
     def _solve(self, row, col, grid):
@@ -26,16 +38,18 @@ class PuzzleSolver:
         next_row = row + 1 if col == self.size - 1 else row
         next_col = col + 1 if col < self.size - 1 else 0
 
-        if self.clue_grid[row][col] != '?':
+        if self.clue_grid[row][col] != 'e':
             # Cell with clue - skip
             self._solve(next_row, next_col, grid)
             return
 
         # Try both possibilities
         for value in ['t', 'l']:
-            if self._is_valid_placement(row, col, value, grid):
+            if self._is_valid_placement(row, col, value, grid, self.diagonal):
                 grid[row][col] = value
                 self._solve(next_row, next_col, grid)
+            if not self._validate_solution(grid):
+
                 grid[row][col] = '?'  # Backtrack
 
     def _is_valid_placement(self, row, col, value, grid, diagonal):

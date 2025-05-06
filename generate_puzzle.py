@@ -10,7 +10,9 @@ class PuzzleGenerator:
         self.size = size
         self.difficulty = difficulty
         self.grid = np.full((size, size), 'e', dtype=object)
-        self.clue_grid = np.zeros((size, size), dtype=int)
+        # self.clue_grid = np.zeros((size, size), dtype=int)
+        self.clue_grid = np.full((size, size), 'e', dtype=str)
+
         self.diagonal = diagonal
 
         # # Difficulty settings
@@ -39,19 +41,32 @@ class PuzzleGenerator:
 
         # Verify uniqueness
         solver = PuzzleSolver(self.clue_grid)
+        # print(solver.count_solutions())
+        print(solver)
         if solver.count_solutions() == 1:
             return self.grid, self.clue_grid
         return self.generate_valid_solution()  # Retry if not unique
 
+    # def _calculate_clues(self):
+    #     """Calculate clue values for empty cells"""
+    #     for i in range(self.size):
+    #         for j in range(self.size):
+    #             if self.grid[i][j] == 'e':
+    #                 # self.clue_grid[i][j] = self._get_neighbor_sum(i, j, self.diagonal)
+    #                 self.clue_grid[i][j] = str(self._get_neighbor_sum(i, j, self.diagonal))
+    #
+    #             else:
+    #                 self.clue_grid[i][j] = '?'  # Non-clue cells
+    #                 #TODO: experimenting here changed 0 to 750
     def _calculate_clues(self):
         """Calculate clue values for empty cells"""
         for i in range(self.size):
             for j in range(self.size):
                 if self.grid[i][j] == 'e':
-                    self.clue_grid[i][j] = self._get_neighbor_sum(i, j, self.diagonal)
-                else:
-                    self.clue_grid[i][j] = 0  # Non-clue cells
-
+                    clue = self._get_neighbor_sum(i, j, self.diagonal)
+                    self.clue_grid[i][j] = str(clue)
+                # else:
+                #     self.clue_grid[i][j] = 'e'  # Mark non-clue cells clearly
     def _get_neighbor_sum(self, x, y, diagonal):
         """Calculate sum of orthogonal neighbors"""
         total = 0
@@ -66,6 +81,8 @@ class PuzzleGenerator:
                     total += 1
                 elif self.grid[nx][ny] == 'l':
                     total -= 1
+
+
         return total
 
     def create_puzzle(self):
