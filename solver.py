@@ -1,7 +1,6 @@
 
 import numpy as np
 
-
 class PuzzleSolver:
     def __init__(self, clue_grid, diagonal = False):
         self.size = len(clue_grid)
