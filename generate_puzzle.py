@@ -11,7 +11,7 @@ class PuzzleGenerator:
         self.difficulty = difficulty
         self.grid = np.full((size, size), 'e', dtype=object)
         # self.clue_grid = np.zeros((size, size), dtype=int)
-        self.clue_grid = np.full((size, size), 'e', dtype=str)
+        self.clue_grid = np.full((size, size), 'e', dtype='<U4')
 
         self.diagonal = diagonal
 
@@ -89,7 +89,8 @@ class PuzzleGenerator:
         """Create the final puzzle matrix"""
         solution, clues = self.generate_valid_solution()
 
-        puzzle = np.where(solution == 'e', clues, '?')
+        #puzzle = np.where(solution == 'e', clues, '?')
+        puzzle = np.where(solution == 'e', clues, '?').astype('<U3')  # allow 3-character strings
 
         # === DEBUGGING OUTPUT ===
         print("\n===== GENERATED PUZZLE =====")
