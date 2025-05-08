@@ -77,7 +77,7 @@ Because your generator repeatedly invokes this exponential‐time solver until e
 --------------
 ## Indiviual Contributions to the Project:
 ### Becca
-Developed the puzzle concept and structured a basic generator and solver for a sample puzzle, outlined backtracking algorithm that was implemented and debugged by Vedant. Implemented the diagonal toggle portion of the code into the generator, solver and the UI. Led project management/task delegation. Wrote the ReadMe and outline for presentation.
+Developed the puzzle concept and structured a basic generator and solver for a sample puzzle, outlined backtracking algorithm that was implemented and debugged by Vedant. Implemented the diagonal toggle portion of the code into the generator, solver and the UI. Led project management/task delegation. Wrote the ReadMe and outline for presentation. Solved the 2 remaining bugs after presentation (making there only be one solution, and getting rid of grid.copy() so that our big O analysis would be accurate.)
 ### Ke
 Created an original UI for the project using Flask that allows dynamic visualization of puzzle solving, validating and puzzle toggle options. 
 ### Vedant
