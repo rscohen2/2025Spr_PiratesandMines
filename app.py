@@ -1,3 +1,16 @@
+"""
+This page calls from the solver and generate_puzzle scripts to run a flask app using these two scripts to generate and solve our puzzle.
+In this header, we also wish to disclose that ChatGPT was used as a debugging tool in a few cases. For instance, ChatGPT had recommended the "<U4" fix that fixed an error where '-' (a negative sign) was being displayed rather than the full clue for negative clues.
+
+For the multiple solution bug, we realized the solver was not properly finding all the solutions to a particular puzzle, and while a correct solution was printed in the output itself, the solution stored in the list was all 'e' cells.
+This was due to a mix of 'e' and '?' being used in different stages of the puzzle where the other should have been used instead.
+In addition, there was a confusing use of 0 being used for both non-clue cells due to the int structure of the np array. Thus, I changed the structure to str data type in order to mark non-clue cells as 'e' instead of 0. When they were marked as 0, it was difficult to tell which were actually non-clue cells, and which were clue cells with a value of 0.
+Finally, the backtracking algorithm was not checking first for a valid solution, which caused the issue of the solution stored in the solution list to become all 'e's since the if statement condition was always met.
+
+For removing the grid.copy() so that our big O was accurate, we saved the original grid to a variable instead, so that we could revert any changes made at the end of the function without creating an entirely new object to be stored in memory.
+
+"""
+
 from flask import Flask, request, jsonify, render_template, send_from_directory
 import numpy as np
 import os
